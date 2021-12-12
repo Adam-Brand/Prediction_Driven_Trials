@@ -1,5 +1,326 @@
 source("Programs/sim_source.R")
 
+filename_enrich <- paste("subgrp", "enrich", smple.size[2], "exp", 
+                         "Bpos",medianBpos, "Apos", medianApos, "Bneg",medianBneg, "Aneg",  medianAneg, "rds", sep=".")
+saveRDS(test2, file=paste("Results", "subgrp",filename_enrich, sep="/"))
+
+test1 <- readRDS("Results/clin/clin.strategy.500.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.PC.0.rds")
+test2 <- readRDS("Results/clin/Run1/clin.strategy.500.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.PC.0.rds")
+test3 <- readRDS("Results/subgrp/subgrp.stratify.550.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+
+test3 <- x$inter_modstrat
+
+undebug(analyze.exp)
+x <- readRDS("Results/subgrp/subgrp.enrich.1000.accru.25.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.75.LTFU.0.02.rds")
+debug(analyze.exp)
+check <- analyze.exp(data <- x,
+                     estimand="subgrp",
+                     design.type="enrich",
+                     medianBpos=21,
+                     medianBneg=9,
+                     medianApos=9,
+                     medianAneg=12,
+                     marker.pos=.75,
+                     phys.choice=0)
+
+
+
+undebug(fintable)
+fintable(caption="test",
+         estimand="inter",
+         design.type="stratify",
+         smple.size=smple.size <- seq(from=250, to=1000, by=50),
+         accru=25,
+         LTFU=.02,
+         medianBpos=12,
+         medianBneg=9,
+         medianApos=9,
+         medianAneg=12,
+         marker.pos=.25,
+         phys.choice=.25,
+         rpos=0.5)
+
+debug(power.curve)
+check <- power.curve(caption="test",
+                     estimand="inter",
+                     design.type="stratify",
+                     smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                     accru=25,
+                     LTFU=.02,
+                     medianBpos=15,
+                     medianBneg=9,
+                     medianApos=9,
+                     medianAneg=12,
+                     marker.pos=.25,
+                     phys.choice=.25,
+                     rpos=0.5            # randomization to treatment b in the positives
+)
+
+par(mfrow=c(4,4))
+fig9.25.5 <- power.curve(caption="test",
+                         estimand="inter",
+                         design.type="stratify",
+                         smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                         accru=25,
+                         LTFU=.02,
+                         medianBpos=9,
+                         medianBneg=9,
+                         medianApos=9,
+                         medianAneg=12,
+                         marker.pos=.25,
+                         phys.choice=.25,
+                         rpos=0.5            # randomization to treatment b in the positives
+)
+fig12.25.5 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=12,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.5            # randomization to treatment b in the positives
+)
+fig15.25.5 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=15,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.5            # randomization to treatment b in the positives
+)
+
+fig21.25.5 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=21,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.5            # randomization to treatment b in the positives
+)
+
+fig9.25.67 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=9,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.67            # randomization to treatment b in the positives
+)
+fig12.25.67 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=12,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.67            # randomization to treatment b in the positives
+)
+fig15.25.67 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=15,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.67            # randomization to treatment b in the positives
+)
+fig21.25.67 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=21,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.25,
+                          phys.choice=.25,
+                          rpos=0.67            # randomization to treatment b in the positives
+)
+fig9.5.5 <- power.curve(caption="test",
+                          estimand="inter",
+                          design.type="stratify",
+                          smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                          accru=25,
+                          LTFU=.02,
+                          medianBpos=9,
+                          medianBneg=9,
+                          medianApos=9,
+                          medianAneg=12,
+                          marker.pos=.5,
+                          phys.choice=.25,
+                          rpos=0.5            # randomization to treatment b in the positives
+)
+fig12.5.5 <- power.curve(caption="test",
+                        estimand="inter",
+                        design.type="stratify",
+                        smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                        accru=25,
+                        LTFU=.02,
+                        medianBpos=12,
+                        medianBneg=9,
+                        medianApos=9,
+                        medianAneg=12,
+                        marker.pos=.5,
+                        phys.choice=.25,
+                        rpos=0.5            # randomization to treatment b in the positives
+)
+fig15.5.5 <- power.curve(caption="test",
+                        estimand="inter",
+                        design.type="stratify",
+                        smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                        accru=25,
+                        LTFU=.02,
+                        medianBpos=15,
+                        medianBneg=9,
+                        medianApos=9,
+                        medianAneg=12,
+                        marker.pos=.5,
+                        phys.choice=.25,
+                        rpos=0.5            # randomization to treatment b in the positives
+)
+fig21.5.5 <- power.curve(caption="test",
+                        estimand="inter",
+                        design.type="stratify",
+                        smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                        accru=25,
+                        LTFU=.02,
+                        medianBpos=21,
+                        medianBneg=9,
+                        medianApos=9,
+                        medianAneg=12,
+                        marker.pos=.5,
+                        phys.choice=.25,
+                        rpos=0.5            # randomization to treatment b in the positives
+)
+fig9.5.67 <- power.curve(caption="test",
+                        estimand="inter",
+                        design.type="stratify",
+                        smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                        accru=25,
+                        LTFU=.02,
+                        medianBpos=9,
+                        medianBneg=9,
+                        medianApos=9,
+                        medianAneg=12,
+                        marker.pos=.5,
+                        phys.choice=.25,
+                        rpos=0.67            # randomization to treatment b in the positives
+)
+fig12.5.67 <- power.curve(caption="test",
+                         estimand="inter",
+                         design.type="stratify",
+                         smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                         accru=25,
+                         LTFU=.02,
+                         medianBpos=12,
+                         medianBneg=9,
+                         medianApos=9,
+                         medianAneg=12,
+                         marker.pos=.5,
+                         phys.choice=.25,
+                         rpos=0.67            # randomization to treatment b in the positives
+)
+fig15.5.67 <- power.curve(caption="test",
+                         estimand="inter",
+                         design.type="stratify",
+                         smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                         accru=25,
+                         LTFU=.02,
+                         medianBpos=15,
+                         medianBneg=9,
+                         medianApos=9,
+                         medianAneg=12,
+                         marker.pos=.5,
+                         phys.choice=.25,
+                         rpos=0.67            # randomization to treatment b in the positives
+)
+fig21.5.67 <- power.curve(caption="test",
+                         estimand="inter",
+                         design.type="stratify",
+                         smple.size=smple.size <- seq(from=250, to=1000, by=50),
+                         accru=25,
+                         LTFU=.02,
+                         medianBpos=21,
+                         medianBneg=9,
+                         medianApos=9,
+                         medianAneg=12,
+                         marker.pos=.5,
+                         phys.choice=.25,
+                         rpos=0.67            # randomization to treatment b in the positives
+)
+
+test <- ggarrange(fig9.25.5, fig12.25.5, fig15.25.5, fig21.25.5,
+                  fig9.25.67, fig12.25.67, fig15.25.67, fig21.25.67,
+                  fig9.5.5, fig12.5.5, fig15.5.5, fig21.5.5,
+                  fig9.5.67, fig12.5.67, fig15.5.67, fig21.5.67,
+                  ncol=4, nrow=4)
+
+annotate_figure(test, 
+                top=text_grob("Median Survival for Positive Patients on Treatment B
+        9 months                 12 months                     15 months                  21 months", size=16),
+                left=text_grob("Proportion of Biomarker Positive Patients
+0.5                                   0.25", size=16, rot=90),
+                right=text_grob("Randomization of Positive Patients to B
+   0.5                     0.67                 0.5               0.67", size=16, rot=-90))
+                
+test
+
+test <- plot_grid(NULL,NULL,NULL,NULL,NULL,
+                  NULL,fig9.25.5, fig12.25.5, fig15.25.5, fig21.25.5,
+                  NULL,fig9.25.67, fig12.25.67, fig15.25.67, fig21.25.67,
+                  NULL,fig9.5.5, fig12.5.5, fig15.5.5, fig21.5.5,
+                  NULL,fig9.5.67, fig12.5.67, fig15.5.67, fig21.5.67,
+          #labels=c("A","B","C","D"),
+          ncol=5, nrow=5)
+
+test2 <- test + draw_figure_label(label="Median Survival in Positive Patients on Treatment B
+
+
+                         9 months                12 months              15 months              21 months", position="top.right", size=16)
+
+test3 <- test2 +  draw_figure_label(label="M=1 Proportion
+                    0.5                                                    0.25       
+                    Randomization Probability:              Randomization Probability 
+                    0.67                0.5                 0.67               0.5", 
+                    position="bottom.left", angle=-90, size=16)
+test3
+
+test <- c(1,NA,3)
 
 #debug(simdat)
 set.seed(12)
@@ -14,11 +335,11 @@ check1 <- simdat(n=5000,
                  phys.choice.pos=.2,
                  phys.choice.neg=.8,
                  
-                 medposB=9,
-                 distrposB="weib",
+                 medposB=21,
+                 distrposB="exp",
                  shapeposB=3,
                  
-                 medposA=6,
+                 medposA=9,
                  distrposA="exp",
                  
                  mednegB=9,
@@ -26,6 +347,8 @@ check1 <- simdat(n=5000,
                  
                  mednegA=12,
                  distrnegA="exp")
+
+
 
 temp <- check1[order(check1$arm),]
 
@@ -46,6 +369,8 @@ median(posB$surv.timeB)
 median(posA$surv.timeA)
 median(negB$surv.timeB)
 median(negA$surv.timeA)
+
+test <- sum(posA$surv.timeA>=29.9)/length(posA$surv.timeA)
 
 pseudo <- pseudosurv(check1$surv.time, check1$event, tmax=10)
 ipseudo <- ipseudo <- 1-pseudo$pseudo
@@ -133,9 +458,23 @@ filename_enrich <- paste("subgrp", "enrich", smple.size[2], "exp",
                          "Bpos",medianBpos, "Apos", medianApos, "Bneg",medianBneg, "Aneg",  medianAneg, "rds", sep=".")
 saveRDS(test2, file=paste("Results", "subgrp",filename_enrich, sep="/"))
 
-test4 <- readRDS("Results/inter/test2.rds")
+test1 <- readRDS("Results/clin/clin.strategy.500.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.PC.0.rds")
+test2 <- readRDS("Results/clin/Run1/clin.strategy.500.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.PC.0.rds")
+test3 <- readRDS("Results/subgrp/subgrp.stratify.550.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
 
 test3 <- x$inter_modstrat
+
+undebug(analyze.exp)
+check <- analyze.exp(data <- readRDS("Results/inter/inter.stratify.1000.accru.25.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rpos.0.67.rds"),
+                     estimand="inter",
+                     design.type="stratify",
+                     medianBpos=21,
+                     medianBneg=9,
+                     medianApos=9,
+                     medianAneg=12,
+                     marker.pos=.5,
+                     phys.choice.pos=0.25,
+                     phys.choice.neg=0.25)
 
 
 debug(simdat)
@@ -275,12 +614,114 @@ check2 <- check1[check1$marker.stat==1 & check1$trt=="B" & check1$phys.trt=="B",
 fit1 <- survfit(Surv(surv.time, event) ~ trt, data=check1)
 ggsurvplot(fit1, data=check1)
 
-test <- readRDS(file="Results/clin/clin.modstrat.250.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.9.rds")
-test2 <- readRDS(file="Results/clin/clin.stratify.250.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.9.rds")
-test3 <- readRDS(file="Results/clin/clin.strategy.250.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.9.rds")
+test1 <- readRDS("Results/inter/inter.stratify.300.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rpos.0.5.rds")
+test2 <- readRDS("Results/subgrp/subgrp.stratify.600.accru.25.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+test3 <- readRDS("Results/subgrp/subgrp.enrich.950.accru.25.exp.Bpos.15.Apos.9.Bneg.9.Aneg.12.M.0.75.LTFU.0.02.rds")
+test4 <- x$subgrp_enrich
+
+true.rat <- exp(-(log(2)/15)*51.8)/exp(-(log(2)/9)*51.8)
 
 
 
+source("Programs/sim_source.R")
+
+# selecting a vecotr of sample sizes
+smple.size <- 950
+
+
+
+Bpos <- 15
+Bneg <- 9
+Apos <- 9
+Aneg <- 12
+M <- .75
+LTFU <- .02
+
+
+for (j in 1:length(Bpos)){
+  for (k in 1:length(M)){
+    
+    # selecting survival distributions and median survival for each of the 4 groups
+    distr_Bpos <- "exp"
+    medianBpos <- Bpos[j]
+    
+    distr_Bneg <- "exp"
+    medianBneg <- Bneg
+    
+    distr_Apos <- "exp"
+    medianApos <- Apos
+    
+    distr_Aneg <- "exp"
+    medianAneg <- Aneg
+    
+    Mpos <- M[k]
+    
+    
+    accru <- 25
+    
+    set.seed(12)
+    #getting results for each smple.size based on 1000 replications
+    for (i in 1:length(smple.size)){
+      debug(eval.scen)
+      x <- eval.scen(estimand="subgrp", 
+                     reps=100, 
+                     max_enroll=10000,  
+                     n=smple.size[i], 
+                     num_interim=1, 
+                     int_timing=1, 
+                     alpha=.025, 
+                     low_err=0.1,  
+                     bound.type=c(1,1), 
+                     # time.points=time.point,    
+                     # RM.times=time.point, 
+                     
+                     accru.rate=accru,           
+                     loss.fu.rate=LTFU,          
+                     marker.pos=Mpos,           
+                     rand.arm=.5,             
+                     rand.pos=.5,            
+                     rand.neg=.5,             
+                     rand=0.5,
+                     phys.choice.pos=.5,        
+                     phys.choice.neg=.5,
+                     
+                     medposB=medianBpos,             
+                     distrposB=distr_Bpos,           
+                     shapeposB,         
+                     
+                     medposA=medianApos,             
+                     distrposA=distr_Apos,           
+                     shapeposA,           
+                     
+                     mednegB=medianBneg,             
+                     distrnegB=distr_Bneg,           
+                     shapenegB,           
+                     
+                     mednegA=medianAneg,             
+                     distrnegA=distr_Aneg,          
+                     shapenegA          
+      )
+      
+      temp_enrich <- x$subgrp_enrich
+      temp_strat <- x$subgrp_stratify
+      # temp_mod <- x$subgrp_modstrat
+      
+      filename_enrich <- paste("subgrp", "enrich", smple.size[i], "accru", accru, "exp", 
+                               "Bpos",medianBpos, "Apos", medianApos, "Bneg",medianBneg, "Aneg",  medianAneg, 
+                               "M", Mpos, "LTFU", LTFU, "rds", sep=".")
+      
+      filename_strat <- paste("subgrp", "stratify", smple.size[i], "accru", accru,"exp", 
+                              "Bpos",medianBpos, "Apos", medianApos, "Bneg",medianBneg, "Aneg",  medianAneg,
+                              "M", Mpos, "LTFU", LTFU, "rds", sep=".")
+      # filename_mod <- paste("subgrp", "modstrat", smple.size[i], "accru", accru,"exp", 
+      #                         "Bpos",medianBpos, "Apos", medianApos, "Bneg",medianBneg, "Aneg",  medianAneg,
+      #                       "M", Mpos, "LTFU", LTFU, "rds",sep=".")
+      
+      saveRDS(temp_enrich, file=paste("Results", "subgrp",filename_enrich, sep="/"))
+      saveRDS(temp_strat, file=paste("Results", "subgrp",filename_strat, sep="/"))
+      # saveRDS(temp_mod, file=paste("Results", "subgrp",filename_mod, sep="/"))
+    }
+  }}
 
 
 

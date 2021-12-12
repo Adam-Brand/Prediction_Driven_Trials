@@ -35,13 +35,14 @@ sim.trial <- function(data, # input survival data from our data generating funct
                                           # stratify
                                           # strategy
                                           # modstrat
-                      test.grp       # the group comparison that the logrank test is based on, choices are
+                      test.grp,       # the group comparison that the logrank test is based on, choices are
                                          # pos - trt B vs A in the positives
                                          # neg - trt B vs A in the negatives
                                          # clin - clinical utility; strategy arm vs phys choice arm
                                          # trtB - pos vs neg for trtB patients
                                          # trtA - pos vs neg for trtA patients
                                          # inter - 4 way comparison for interaction; k=4 logrank test
+                     pseudot.ratio    # the set time point to compare survival ratios, set to 90th percentile for lowest survival group
                       ){
   
   # getting the pvalue cutoffs for the analysis times
@@ -264,9 +265,10 @@ sim.trial <- function(data, # input survival data from our data generating funct
   }
   
   # computing the pseudo observations and pseudomean
-  pseudo <- pseudosurv(temp$surv.time, temp$event)
-  ipseudo <- 1-pseudo$pseudo[,ncol(pseudo$pseudo)]
+  pseudo <- pseudosurv(temp$surv.time, temp$event, tmax = pseudot.ratio)
+  ipseudo <- pseudo$pseudo[,ncol(pseudo$pseudo)]
   pseudom <- pseudomean(temp$surv.time, temp$event)
+  pseudo_time <- max(temp$surv.time)
   temp <- data.frame(cbind(temp, ipseudo=ipseudo, pseudom=pseudom))
   temp_pos <- temp[temp$marker.stat==1,]
   temp_neg <- temp[temp$marker.stat==0,]
@@ -302,7 +304,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
    # M <- length(time.points)
    # for (i in 1:M){
       fit <- geese(formula=ipseudo ~ trt, data=temp, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.a <- round(cbind(mean=fit$beta, SE=sqrt(diag(fit$vbeta.ajs)), Z=fit$beta/sqrt(diag(fit$vbeta.ajs)),
                                 PVal = 2-2*pnorm(abs(fit$beta/sqrt(diag(fit$vbeta.ajs))))),4)
       ratio_mean <- exp(sum_fit.a["trtB","mean"])
@@ -338,7 +340,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
     result <- c(nenroll, nevents, stdy_time,
                        pval, chisq, upper.bound,lower.bound,
                       exp_num, stop_eff, stop_fut, medA, medB, medpos,
-                       HR, ratio, RM)
+                       HR, ratio, RM, pseudo_time, pseudot.ratio)
   }
   else if (design.type=="stratify" | design.type=="modstrat"){
     # extracting median survival for each group
@@ -361,7 +363,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
    # for (i in 1:M){
       # getting ratio of B vs A in the positives
       fit_pos <- geese(formula=ipseudo ~ trt, data=temp_pos, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.a <- round(cbind(mean=fit_pos$beta, SE=sqrt(diag(fit_pos$vbeta.ajs)), Z=fit_pos$beta/sqrt(diag(fit_pos$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_pos$beta/sqrt(diag(fit_pos$vbeta.ajs))))),4)
       ratio_mean_pos <- exp(sum_fit.a["trtB","mean"])
@@ -371,7 +373,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
       ratio_pos <- c(ratio_pos, ratio_mean_pos, ratio_lower_pos,ratio_upper_pos, ratio_pval_pos)
       # getting ratio of B vs A in the negatives
       fit_neg <- geese(formula=ipseudo ~ trt, data=temp_neg, id=id, scale.fix=TRUE, 
-                       family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                       family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.b <- round(cbind(mean=fit_neg$beta, SE=sqrt(diag(fit_neg$vbeta.ajs)), Z=fit_neg$beta/sqrt(diag(fit_neg$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_neg$beta/sqrt(diag(fit_neg$vbeta.ajs))))),4)
       ratio_mean_neg <- exp(sum_fit.b["trtB","mean"])
@@ -381,7 +383,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
       ratio_neg <- c(ratio_neg, ratio_mean_neg, ratio_lower_neg,ratio_upper_neg, ratio_pval_neg)
       # getting ratio of B vs A overall
       fit <- geese(formula=ipseudo ~ trt, data=temp, id=id, scale.fix=TRUE, 
-                       family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                       family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.c <- round(cbind(mean=fit$beta, SE=sqrt(diag(fit$vbeta.ajs)), Z=fit$beta/sqrt(diag(fit$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit$beta/sqrt(diag(fit$vbeta.ajs))))),4)
       ratio_mean <- exp(sum_fit.c["trtB","mean"])
@@ -391,7 +393,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
       ratio <- c(ratio, ratio_mean, ratio_lower,ratio_upper, ratio_pval)
       # getting ratio of interaction term
       fit_int <- geese(formula=ipseudo ~ trt*Marker, data=temp, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.d <- round(cbind(mean=fit_int$beta, SE=sqrt(diag(fit_int$vbeta.ajs)), Z=fit_int$beta/sqrt(diag(fit_int$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_int$beta/sqrt(diag(fit_int$vbeta.ajs))))),4)
       ratio_mean_int <- exp(sum_fit.d["trtB:Marker+","mean"])
@@ -401,7 +403,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
       ratio_int <- c(ratio_int, ratio_mean_int, ratio_lower_int,ratio_upper_int, ratio_pval_int)
       # getting ratio between arms
       fit_arm <- geese(formula=ipseudo ~ arm, data=temp, id=id, scale.fix=TRUE, 
-                       family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                       family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.e <- round(cbind(mean=fit_arm$beta, SE=sqrt(diag(fit_arm$vbeta.ajs)), Z=fit_arm$beta/sqrt(diag(fit_arm$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_arm$beta/sqrt(diag(fit_arm$vbeta.ajs))))),4)
       ratio_mean_arm <- exp(sum_fit.e["armstrat","mean"])
@@ -502,7 +504,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
     hr.est.int <- exp(fit.hr.int$coefficients["trtB:Marker+"])
     hr.lower.int <- exp(fit.hr.int$coefficients["trtB:Marker+"] - (summary(fit.hr.int)$coefficients[3,4]*qnorm(1-alpha)))
     hr.upper.int <- exp(fit.hr.int$coefficients["trtB:Marker+"] + (summary(fit.hr.int)$coefficients[3,4]*qnorm(1-alpha)))
-    hr.pval.int <- summary(fit.hr.int)$waldtest[3]
+    hr.pval.int <- summary(fit.hr.int)$coefficients[3,6]
     HR_int <- c(hr.est.int, hr.lower.int, hr.upper.int, hr.pval.int)
     
     # getting HR between arms
@@ -518,7 +520,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
                 exp_num, stop_eff, stop_fut,medA, medB,medAneg, medApos, medBneg, medBpos, medneg, medpos,
                 medphys, medstrat, HR, HR_pos, HR_neg, HR_int, HR_arm, 
                 ratio, ratio_pos, ratio_neg, ratio_int, ratio_arm,
-                RM, RM_pos, RM_neg, RM_int, RM_arm)
+                RM, RM_pos, RM_neg, RM_int, RM_arm, pseudo_time, pseudot.ratio)
     
   }
   else if (design.type=="strategy"){
@@ -541,7 +543,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
    # M <- length(time.points)
    # for (i in 1:M){
       fit.rat <- geese(formula=ipseudo ~ arm, data=temp, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="cloglog", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
       sum_fit.rat <- round(cbind(mean=fit.rat$beta, SE=sqrt(diag(fit.rat$vbeta.ajs)), Z=fit.rat$beta/sqrt(diag(fit.rat$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit.rat$beta/sqrt(diag(fit.rat$vbeta.ajs))))),4)
       ratio_mean_arm <- exp(sum_fit.rat["armstrat","mean"])
@@ -575,7 +577,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
     result <- c(nenroll, nevents, stdy_time, pval, chisq, upper.bound,lower.bound,
                 exp_num, stop_eff, stop_fut,  medphys, medstrat, medstratpos, medstratneg, medphyspos, medphysneg,
                 medstratB, medstratA, medphysB, medphysA, HR_arm,
-                ratio_arm, RM_arm)
+                ratio_arm, RM_arm, pseudo_time, pseudot.ratio)
   }
   
     return(result)
@@ -627,9 +629,8 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                        shapenegA=1           # shape parmeter for the weibull distribution; negatives, trtmt A
 ){
   
-  
   # creating the result data frame for the enirchment design results
-  cols_enrich <- 17+(4*1)+(4*1)
+  cols_enrich <- 17+(4*1)+(4*1)+2
   result_enrich <- data.frame(matrix(nrow=reps, ncol = cols_enrich))
   names1_enrich <- NULL
   names2_enrich <- NULL
@@ -668,10 +669,10 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
   colnames(result_enrich) <- c("enroll", "events", "analysis.time",
                         "pvalue", "chisq", "upper.bound","lower.bound",
                         "exp.diff", "stop.eff", "stop.fut", "medianA", "medianB","medianpos",
-                        "hr.mean", "hr.lower", "hr.upper","hr.pval" ,names1_enrich, names2_enrich)
+                        "hr.mean", "hr.lower", "hr.upper","hr.pval" ,names1_enrich, names2_enrich, "pseudom.time", "pseudor.time")
   
   # creating the result data frame for the stratified design results
-  cols_strat <- 40+(20*1)+(20*1)
+  cols_strat <- 40+(20*1)+(20*1)+2
   result_strat <- data.frame(matrix(nrow=reps, ncol = cols_strat))
   names1_strat <- NULL
   names2_strat <- NULL
@@ -747,7 +748,8 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                                "hr.pos.mean","hr.pos.lower","hr.pos.upper","hr.pos.pval",
                                "hr.neg.mean","hr.neg.lower","hr.neg.upper","hr.neg.pval",
                                "hr.int.mean","hr.int.lower","hr.int.upper","hr.int.pval", 
-                               "hr.arm.mean","hr.arm.lower","hr.arm.upper","hr.arm.pval", names1_strat, names2_strat)
+                               "hr.arm.mean","hr.arm.lower","hr.arm.upper","hr.arm.pval", names1_strat, names2_strat, 
+                              "pseudom.time", "pseudor.time")
   
   
   # creating the result data frame for the enirchment design results; same as the stratified results
@@ -755,7 +757,7 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
   
   
   # creating the result data frame for the strategy design results
-  cols_clin <- 24+(4*1)+(4*1)
+  cols_clin <- 24+(4*1)+(4*1)+2
   result_clin <- data.frame(matrix(nrow=reps, ncol = cols_clin))
   names1_clin <- NULL
   names2_clin <- NULL
@@ -796,9 +798,12 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                                "exp.diff", "stop.eff", "stop.fut", "medianphys", "medianstrat", "medianstratpos",
                                "medianstratneg", "medianphyspos", "medianphysneg",
                                "medianstratB", "medianstratA", "medianphysB","medianphysA",
-                               "hr.arm.mean", "hr.arm.lower", "hr.arm.upper","hr.arm.pval" ,names1_clin, names2_clin)
+                               "hr.arm.mean", "hr.arm.lower", "hr.arm.upper","hr.arm.pval" ,names1_clin, names2_clin, 
+                             "pseudom.time", "pseudor.time")
   
   if (estimand=="subgrp"){
+    min.surv <- min(medposB, medposA)
+    pseudot <- (-log(0.5))/(log(2)/min.surv)
   
     for (i in 1:reps){
       # simulate data
@@ -851,13 +856,14 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                                      # stratify
                                      # strategy
                                      # modstrat
-                                     test.grp="pos"       # the group comparison that the logrank test is based on, choices are
+                                     test.grp="pos",       # the group comparison that the logrank test is based on, choices are
                                      # pos - trt B vs A in the positives
                                      # neg - trt B vs A in the negatives
                                      # clin - clinical utility; strategy arm vs phys choice arm
                                      # trtB - pos vs neg for trtB patients
                                      # trtA - pos vs neg for trtA patients
                                      # inter - 4 way comparison for interaction; k=4 logrank test
+                                    pseudot.ratio=pseudot
       )
       
       # simulate the trial results for the stratified design
@@ -875,43 +881,49 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                                      # stratify
                                      # strategy
                                      # modstrat
-                                     test.grp="pos"       # the group comparison that the logrank test is based on, choices are
+                                     test.grp="pos",       # the group comparison that the logrank test is based on, choices are
                                      # pos - trt B vs A in the positives
                                      # neg - trt B vs A in the negatives
                                      # clin - clinical utility; strategy arm vs phys choice arm
                                      # trtB - pos vs neg for trtB patients
                                      # trtA - pos vs neg for trtA patients
                                      # inter - 4 way comparison for interaction; k=4 logrank test
+                                    pseudot.ratio=pseudot
       )
       
-      # simulate the trial results for the modified strategy design
-      result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
-                                    n=n, # total number of events
-                                    num_interim=num_interim, # total number of analyses, including final
-                                    int_timing=int_timing, # vector of proportion of events for each interim analysis timing
-                                    alpha=alpha, # one-sided type 1 error rate (upper boundary)
-                                    low_err=low_err,  # lower (futility) boundary error
-                                    bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
-                                   # time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
-                                  #  RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
-                                    design.type="modstrat",    # type of design being analyzed choices are:
-                                    # enrich
-                                    # stratify
-                                    # strategy
-                                    # modstrat
-                                    test.grp="pos"       # the group comparison that the logrank test is based on, choices are
-                                    # pos - trt B vs A in the positives
-                                    # neg - trt B vs A in the negatives
-                                    # clin - clinical utility; strategy arm vs phys choice arm
-                                    # trtB - pos vs neg for trtB patients
-                                    # trtA - pos vs neg for trtA patients
-                                    # inter - 4 way comparison for interaction; k=4 logrank test
-      )
+      # # simulate the trial results for the modified strategy design
+      # result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
+      #                               n=n, # total number of events
+      #                               num_interim=num_interim, # total number of analyses, including final
+      #                               int_timing=int_timing, # vector of proportion of events for each interim analysis timing
+      #                               alpha=alpha, # one-sided type 1 error rate (upper boundary)
+      #                               low_err=low_err,  # lower (futility) boundary error
+      #                               bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
+      #                              # time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
+      #                             #  RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
+      #                               design.type="modstrat",    # type of design being analyzed choices are:
+      #                               # enrich
+      #                               # stratify
+      #                               # strategy
+      #                               # modstrat
+      #                               test.grp="pos",       # the group comparison that the logrank test is based on, choices are
+      #                               # pos - trt B vs A in the positives
+      #                               # neg - trt B vs A in the negatives
+      #                               # clin - clinical utility; strategy arm vs phys choice arm
+      #                               # trtB - pos vs neg for trtB patients
+      #                               # trtA - pos vs neg for trtA patients
+      #                               # inter - 4 way comparison for interaction; k=4 logrank test
+      #                               pseudot.ratio=pseudot
+      # )
     }
-    resultList <- list("subgrp_enrich"=result_enrich, "subgrp_stratify"=result_strat, "subgrp_modstrat"=result_mod)
+    resultList <- list("subgrp_enrich"=result_enrich, "subgrp_stratify"=result_strat
+                       #, "subgrp_modstrat"=result_mod
+                       )
   }
   
   else if (estimand=="clin"){
+    min.surv <- min(medposB, medposA, mednegB, mednegA)
+    pseudot <- (-log(0.5))/(log(2)/min.surv)
     for (i in 1:reps){
       # simulate data
       x <- simdat(n=max_enroll,                    # total sample size
@@ -962,67 +974,74 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                                    # stratify
                                    # strategy
                                    # modstrat
-                                   test.grp="clin"       # the group comparison that the logrank test is based on, choices are
+                                   test.grp="clin",       # the group comparison that the logrank test is based on, choices are
                                    # pos - trt B vs A in the positives
                                    # neg - trt B vs A in the negatives
                                    # clin - clinical utility; strategy arm vs phys choice arm
                                    # trtB - pos vs neg for trtB patients
                                    # trtA - pos vs neg for trtA patients
                                    # inter - 4 way comparison for interaction; k=4 logrank test
+                                 pseudot.ratio=pseudot
     )
     
     # simulate the trial results for the stratified design
-    result_strat[i,] <- sim.trial(data=x, # input survival data from our data generating function
-                                  n=n, # total number of events
-                                  num_interim=num_interim, # total number of analyses, including final
-                                  int_timing=int_timing, # vector of proportion of events for each interim analysis timing
-                                  alpha=alpha, # one-sided type 1 error rate (upper boundary)
-                                  low_err=low_err,  # lower (futility) boundary error
-                                  bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
-                                #  time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
-                                 # RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
-                                  design.type="stratify",    # type of design being analyzed choices are:
-                                  # enrich
-                                  # stratify
-                                  # strategy
-                                  # modstrat
-                                  test.grp="clin"       # the group comparison that the logrank test is based on, choices are
-                                  # pos - trt B vs A in the positives
-                                  # neg - trt B vs A in the negatives
-                                  # clin - clinical utility; strategy arm vs phys choice arm
-                                  # trtB - pos vs neg for trtB patients
-                                  # trtA - pos vs neg for trtA patients
-                                  # inter - 4 way comparison for interaction; k=4 logrank test
-    )
+    # result_strat[i,] <- sim.trial(data=x, # input survival data from our data generating function
+    #                               n=n, # total number of events
+    #                               num_interim=num_interim, # total number of analyses, including final
+    #                               int_timing=int_timing, # vector of proportion of events for each interim analysis timing
+    #                               alpha=alpha, # one-sided type 1 error rate (upper boundary)
+    #                               low_err=low_err,  # lower (futility) boundary error
+    #                               bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
+    #                             #  time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
+    #                              # RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
+    #                               design.type="stratify",    # type of design being analyzed choices are:
+    #                               # enrich
+    #                               # stratify
+    #                               # strategy
+    #                               # modstrat
+    #                               test.grp="clin",       # the group comparison that the logrank test is based on, choices are
+    #                               # pos - trt B vs A in the positives
+    #                               # neg - trt B vs A in the negatives
+    #                               # clin - clinical utility; strategy arm vs phys choice arm
+    #                               # trtB - pos vs neg for trtB patients
+    #                               # trtA - pos vs neg for trtA patients
+    #                               # inter - 4 way comparison for interaction; k=4 logrank test
+    #                                pseudot.ratio=pseudot
+    # )
     
     # simulate the trial results for the modified strategy design
-    result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
-                                n=n, # total number of events
-                                num_interim=num_interim, # total number of analyses, including final
-                                int_timing=int_timing, # vector of proportion of events for each interim analysis timing
-                                alpha=alpha, # one-sided type 1 error rate (upper boundary)
-                                low_err=low_err,  # lower (futility) boundary error
-                                bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
-                              #  time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
-                              #  RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
-                                design.type="modstrat",    # type of design being analyzed choices are:
-                                # enrich
-                                # stratify
-                                # strategy
-                                # modstrat
-                                test.grp="clin"       # the group comparison that the logrank test is based on, choices are
-                                # pos - trt B vs A in the positives
-                                # neg - trt B vs A in the negatives
-                                # clin - clinical utility; strategy arm vs phys choice arm
-                                # trtB - pos vs neg for trtB patients
-                                # trtA - pos vs neg for trtA patients
-                                # inter - 4 way comparison for interaction; k=4 logrank test
-    )
+    # result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
+    #                             n=n, # total number of events
+    #                             num_interim=num_interim, # total number of analyses, including final
+    #                             int_timing=int_timing, # vector of proportion of events for each interim analysis timing
+    #                             alpha=alpha, # one-sided type 1 error rate (upper boundary)
+    #                             low_err=low_err,  # lower (futility) boundary error
+    #                             bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
+    #                           #  time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
+    #                           #  RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
+    #                             design.type="modstrat",    # type of design being analyzed choices are:
+    #                             # enrich
+    #                             # stratify
+    #                             # strategy
+    #                             # modstrat
+    #                             test.grp="clin",       # the group comparison that the logrank test is based on, choices are
+    #                             # pos - trt B vs A in the positives
+    #                             # neg - trt B vs A in the negatives
+    #                             # clin - clinical utility; strategy arm vs phys choice arm
+    #                             # trtB - pos vs neg for trtB patients
+    #                             # trtA - pos vs neg for trtA patients
+    #                             # inter - 4 way comparison for interaction; k=4 logrank test
+    #                               pseudot.ratio=pseudot
+    # )
     }
-    resultList <- list("clin_strategy"=result_clin, "clin_stratify"=result_strat, "clin_modstrat"=result_mod)
+    resultList <- list("clin_strategy"=result_clin
+                       #,"clin_stratify"=result_strat, "clin_modstrat"=result_mod
+                       )
   }
   
   else if (estimand=="inter"){
+    min.surv <- min(medposB, medposA, mednegB, mednegA)
+    pseudot <- (-log(0.5))/(log(2)/min.surv)
     for (i in 1:reps){
       # simulate data
       x <- simdat(n=max_enroll,                    # total sample size
@@ -1075,40 +1094,44 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                                     # stratify
                                     # strategy
                                     # modstrat
-                                    test.grp="inter"       # the group comparison that the logrank test is based on, choices are
+                                    test.grp="inter",       # the group comparison that the logrank test is based on, choices are
                                     # pos - trt B vs A in the positives
                                     # neg - trt B vs A in the negatives
                                     # clin - clinical utility; strategy arm vs phys choice arm
                                     # trtB - pos vs neg for trtB patients
                                     # trtA - pos vs neg for trtA patients
                                     # inter - 4 way comparison for interaction; k=4 logrank test
+                                  pseudot.ratio=pseudot
       )
       
-      # simulate the trial results for the modified strategy design
-      result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
-                                  n=n, # total number of events
-                                  num_interim=num_interim, # total number of analyses, including final
-                                  int_timing=int_timing, # vector of proportion of events for each interim analysis timing
-                                  alpha=alpha, # one-sided type 1 error rate (upper boundary)
-                                  low_err=low_err,  # lower (futility) boundary error
-                                  bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
-                                 # time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
-                                #  RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
-                                  design.type="modstrat",    # type of design being analyzed choices are:
-                                  # enrich
-                                  # stratify
-                                  # strategy
-                                  # modstrat
-                                  test.grp="inter"       # the group comparison that the logrank test is based on, choices are
-                                  # pos - trt B vs A in the positives
-                                  # neg - trt B vs A in the negatives
-                                  # clin - clinical utility; strategy arm vs phys choice arm
-                                  # trtB - pos vs neg for trtB patients
-                                  # trtA - pos vs neg for trtA patients
-                                  # inter - 4 way comparison for interaction; k=4 logrank test
-      )
+      # # simulate the trial results for the modified strategy design
+      # result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
+      #                             n=n, # total number of events
+      #                             num_interim=num_interim, # total number of analyses, including final
+      #                             int_timing=int_timing, # vector of proportion of events for each interim analysis timing
+      #                             alpha=alpha, # one-sided type 1 error rate (upper boundary)
+      #                             low_err=low_err,  # lower (futility) boundary error
+      #                             bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
+      #                            # time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
+      #                           #  RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
+      #                             design.type="modstrat",    # type of design being analyzed choices are:
+      #                             # enrich
+      #                             # stratify
+      #                             # strategy
+      #                             # modstrat
+      #                             test.grp="inter",       # the group comparison that the logrank test is based on, choices are
+      #                             # pos - trt B vs A in the positives
+      #                             # neg - trt B vs A in the negatives
+      #                             # clin - clinical utility; strategy arm vs phys choice arm
+      #                             # trtB - pos vs neg for trtB patients
+      #                             # trtA - pos vs neg for trtA patients
+      #                             # inter - 4 way comparison for interaction; k=4 logrank test
+      #                             pseudot.ratio=pseudot
+      # )
     }
-    resultList <- list("inter_stratify"=result_strat, "inter_modstrat"=result_mod)
+    resultList <- list("inter_stratify"=result_strat
+                       #, "inter_modstrat"=result_mod
+                       )
   }
   
   return(resultList)
