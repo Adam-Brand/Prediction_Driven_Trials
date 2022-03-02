@@ -562,12 +562,12 @@ power.curve <- function(estimand,
   power[,c(1,4)] <- apply(power[ , c(1,4)], 2,            # Specify own function within apply
                           function(x) as.numeric(as.character(x)))
   
-    xscale <- scale_x_continuous(name="", breaks=seq(from=smple.size[1], 
+    xscale <- scale_x_continuous(name="Events", breaks=seq(from=smple.size[1], 
                                   to=smple.size[length(smple.size)], by=(smple.size[length(smple.size)]-smple.size[1])/5), 
                                  limits <- c(smple.size[1],smple.size[length(smple.size)]))
     expand <- expand_limits(x=smple.size[1], y=c(0.2, 1))
   
-  yscale <- scale_y_continuous(name="", breaks=seq(from=0.2, to=1, by=.2), limits <- c(0.2,1))
+  yscale <- scale_y_continuous(name="Power", breaks=seq(from=0.2, to=1, by=.2), limits <- c(0.2,1))
   
   fig1 <- ggplot(data=power, mapping=aes(x=events, y=power, color=power.type, group=power.type)) + 
     geom_point() + geom_line() + 
