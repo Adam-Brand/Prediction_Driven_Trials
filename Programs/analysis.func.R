@@ -9,7 +9,7 @@
 # OUTPUT: 
 #        
 
-# R VERSION: 3.6.1
+# R VERSION: 4.0.5
 #==============================================================================
 #Notes: 
 ### 
@@ -42,7 +42,7 @@ if (estimand=="subgrp"){
   # getting the power of each testing method
       power.lr <- round(sum(data$stop.eff==1)/length(data$stop.eff), digits=3)
       power.hr <- round(sum(data$hr.pval<0.05 & data$hr.mean < 1)/length(data$hr.pval), digit=3)
-      power.rat <- round(sum(data[,21]<0.05 & data[,18]>1)/length(data[,21]), digits=3)
+      power.rat <- round(sum(data[,21]<0.05 & data[,18]>0)/length(data[,21]), digits=3)
       power.rmst <- round(sum(data[,25]<0.05 & data[,22]>0)/length(data[,25]), digits=3)
     }
     
@@ -64,7 +64,7 @@ if (estimand=="subgrp"){
   
   # calculating the true contrasts using exponential distributions and given median survivals
   true.hr <- medianApos/medianBpos
-  true.rat <- exp(-(log(2)/medianBpos)*data$pseudor.time[1])/exp(-(log(2)/medianApos)*data$pseudor.time[1])
+  true.rat <- exp(-(log(2)/medianBpos)*data$pseudor.time[1])-exp(-(log(2)/medianApos)*data$pseudor.time[1])
   integrand1 <- function(x){exp(-(x*(log(2)/medianBpos)))}
   integrand2 <- function(x){exp(-(x*(log(2)/medianApos)))}
   int1 <- NULL
@@ -99,7 +99,7 @@ if (estimand=="subgrp"){
       # getting the power of each testing method
       power.lr <- round(sum(data$stop.eff==1 & data$exp.diff>0)/length(data$stop.eff), digits=3)
       power.hr <- round(sum(data$hr.pos.pval<0.05 & data$hr.pos.mean < 1)/length(data$hr.pos.pval), digit=3)
-      power.rat <- round(sum(data[,48]<0.05 & data[,45]>1)/length(data[,45]), digits=3)
+      power.rat <- round(sum(data[,48]<0.05 & data[,45]>0)/length(data[,45]), digits=3)
       power.rmst <- round(sum(data[,68]<0.05 & data[,65]>0)/length(data[,65]), digits=3)
     }
     
@@ -123,7 +123,7 @@ if (estimand=="subgrp"){
     
     # calculating the true contrasts using exponential distributions and given median survivals
     true.hr <- medianApos/medianBpos
-    true.rat <- exp(-(log(2)/medianBpos)*data$pseudor.time[1])/exp(-(log(2)/medianApos)*data$pseudor.time[1])
+    true.rat <- exp(-(log(2)/medianBpos)*data$pseudor.time[1])-exp(-(log(2)/medianApos)*data$pseudor.time[1])
     integrand1 <- function(x){exp(-(x*(log(2)/medianBpos)))}
     integrand2 <- function(x){exp(-(x*(log(2)/medianApos)))}
     int1 <- NULL
@@ -158,7 +158,7 @@ else if (estimand=="clin"){
       # getting the power of each testing method
       power.lr <- round(sum(data$stop.eff==1 & data$exp.diff>0)/length(data$stop.eff), digits=3)
       power.hr <- round(sum(data$hr.arm.pval<0.05 & data$hr.arm.mean < 1)/length(data$hr.arm.pval), digit=3)
-      power.rat <- round(sum(data[,60]<0.05 & data[,57]>1)/length(data[,57]), digits=3)
+      power.rat <- round(sum(data[,60]<0.05 & data[,57]>0)/length(data[,57]), digits=3)
       power.rmst <- round(sum(data[,80]<0.05 & data[,77]>0)/length(data[,77]), digits=3)
     }
     
@@ -187,7 +187,7 @@ else if (estimand=="clin"){
       # getting the power of each testing method
       power.lr <- round(sum(data$stop.eff==1 & data$exp.diff>0)/length(data$stop.eff), digits=3)
       power.hr <- round(sum(data$hr.arm.pval<0.05 & data$hr.arm.mean < 1)/length(data$hr.arm.pval), digit=3)
-      power.rat <- round(sum(data[,28]<0.05 & data[,25]>1)/length(data[,25]), digits=3)
+      power.rat <- round(sum(data[,28]<0.05 & data[,25]>0)/length(data[,25]), digits=3)
       power.rmst <- round(sum(data[,32]<0.05 & data[,29]>0)/length(data[,29]), digits=3)
     }
     
@@ -229,7 +229,7 @@ else if (estimand=="clin"){
     
     
     # computing the true ratio probabilities
-    true.rat <- (((p_pos)*exp(-lam.pos.b*data$pseudor.time[1])) + ((p_neg)*exp(-lam.neg.a*data$pseudor.time[1])))/
+    true.rat <- (((p_pos)*exp(-lam.pos.b*data$pseudor.time[1])) + ((p_neg)*exp(-lam.neg.a*data$pseudor.time[1]))) -
                 (((p_pos*phys.choice)*exp(-lam.pos.b*data$pseudor.time[1])) + ((p_pos*(1-phys.choice))*exp(-lam.pos.a*data$pseudor.time[1])) +
                 ((p_neg*phys.choice)*exp(-lam.neg.a*data$pseudor.time[1])) + ((p_neg*(1-phys.choice))*exp(-lam.neg.b*data$pseudor.time[1])))
     
@@ -298,7 +298,7 @@ else if (estimand=="inter"){
   
   # calculating the true contrasts using exponential distributions and given median survivals
   true.hr <- (medianApos/medianBpos)/(medianAneg/medianBneg)
-  true.rat <- (exp(-(log(2)/medianBpos)*data$pseudor.time[1])/exp(-(log(2)/medianApos)*data$pseudor.time[1]))/(exp(-(log(2)/medianBneg)*data$pseudor.time[1])/exp(-(log(2)/medianAneg)*data$pseudor.time[1]))
+  true.rat <- (exp(-(log(2)/medianBpos)*data$pseudor.time[1])-exp(-(log(2)/medianApos)*data$pseudor.time[1]))-(exp(-(log(2)/medianBneg)*data$pseudor.time[1])-exp(-(log(2)/medianAneg)*data$pseudor.time[1]))
   integrand1 <- function(x){exp(-(x*(log(2)/medianBpos)))}
   integrand2 <- function(x){exp(-(x*(log(2)/medianApos)))}
   integrand3 <- function(x){exp(-(x*(log(2)/medianBneg)))}

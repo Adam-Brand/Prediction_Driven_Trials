@@ -9,7 +9,7 @@
 # OUTPUT: 
 #        
 
-# R VERSION: 3.6.1
+# R VERSION: 4.0.5
 #==============================================================================
 #Notes: 
 
@@ -30,6 +30,7 @@
 # install.packages("xtable")
 # install.packages("tidyverse")
 # install.packages("cowplot")
+# install.packages("dbplyr")
 library(xtable)
 library(geepack)
 library(coxed)
@@ -40,7 +41,7 @@ library(lubridate)
 library(ldbounds)
 library(survRM2)
 library(pseudo)
-library(tidyverse)
+#library(tidyverse)
 library(cowplot)
 
 

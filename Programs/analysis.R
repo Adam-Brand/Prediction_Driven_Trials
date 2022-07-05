@@ -9,7 +9,7 @@
 # OUTPUT: 
 #        
 
-# R VERSION: 3.6.1
+# R VERSION: 4.0.5
 #==============================================================================
 #Notes: 
 ### 
@@ -23,24 +23,12 @@ source("Programs/analysis.func.R")
 
 
 ## creating the figure for the power curves for the differential treatment effect estimand
-fig9.25.5 <- power.curve(estimand="inter",
-                         design.type="stratify",
-                         smple.size= seq(from=250, to=1000, by=50),
-                         accru=25,
-                         LTFU=.02,
-                         medianBpos=9,
-                         medianBneg=9,
-                         medianApos=9,
-                         medianAneg=12,
-                         marker.pos=.25,
-                         phys.choice=.25,
-                         rpos=0.5            # randomization to treatment b in the positives
-)
+
 
 fig9.25.5_2 <- power.curve(estimand="inter",
                          design.type="stratify",
-                         smple.size= seq(from=250, to=2000, by=50),
-                         accru=25,
+                         smple.size= seq(from=250, to=2000, by=150),
+                         accru=10,
                          LTFU=.02,
                          medianBpos=9,
                          medianBneg=9,
@@ -55,7 +43,7 @@ fig9.25.5_2 <- power.curve(estimand="inter",
 fig12.25.5 <- power.curve(estimand="inter",
                           design.type="stratify",
                           smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
+                          accru=10,
                           LTFU=.02,
                           medianBpos=12,
                           medianBneg=9,
@@ -68,7 +56,7 @@ fig12.25.5 <- power.curve(estimand="inter",
 fig15.25.5 <- power.curve(estimand="inter",
                           design.type="stratify",
                           smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
+                          accru=10,
                           LTFU=.02,
                           medianBpos=15,
                           medianBneg=9,
@@ -79,90 +67,13 @@ fig15.25.5 <- power.curve(estimand="inter",
                           rpos=0.5            # randomization to treatment b in the positives
 )
 
-fig21.25.5 <- power.curve(estimand="inter",
-                          design.type="stratify",
-                          smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
-                          LTFU=.02,
-                          medianBpos=21,
-                          medianBneg=9,
-                          medianApos=9,
-                          medianAneg=12,
-                          marker.pos=.25,
-                          phys.choice=.25,
-                          rpos=0.5            # randomization to treatment b in the positives
-)
 
-fig9.25.67 <- power.curve(estimand="inter",
-                          design.type="stratify",
-                          smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
-                          LTFU=.02,
-                          medianBpos=9,
-                          medianBneg=9,
-                          medianApos=9,
-                          medianAneg=12,
-                          marker.pos=.25,
-                          phys.choice=.25,
-                          rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.25.67 <- power.curve(estimand="inter",
-                           design.type="stratify",
-                           smple.size= seq(from=250, to=1000, by=50),
-                           accru=25,
-                           LTFU=.02,
-                           medianBpos=12,
-                           medianBneg=9,
-                           medianApos=9,
-                           medianAneg=12,
-                           marker.pos=.25,
-                           phys.choice=.25,
-                           rpos=0.67            # randomization to treatment b in the positives
-)
-fig15.25.67 <- power.curve(estimand="inter",
-                           design.type="stratify",
-                           smple.size= seq(from=250, to=1000, by=50),
-                           accru=25,
-                           LTFU=.02,
-                           medianBpos=15,
-                           medianBneg=9,
-                           medianApos=9,
-                           medianAneg=12,
-                           marker.pos=.25,
-                           phys.choice=.25,
-                           rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.25.67 <- power.curve(estimand="inter",
-                           design.type="stratify",
-                           smple.size= seq(from=250, to=1000, by=50),
-                           accru=25,
-                           LTFU=.02,
-                           medianBpos=21,
-                           medianBneg=9,
-                           medianApos=9,
-                           medianAneg=12,
-                           marker.pos=.25,
-                           phys.choice=.25,
-                           rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.5.5 <- power.curve(estimand="inter",
-                        design.type="stratify",
-                        smple.size= seq(from=250, to=1000, by=50),
-                        accru=25,
-                        LTFU=.02,
-                        medianBpos=9,
-                        medianBneg=9,
-                        medianApos=9,
-                        medianAneg=12,
-                        marker.pos=.5,
-                        phys.choice=.25,
-                        rpos=0.5            # randomization to treatment b in the positives
-)
+
 
 fig9.5.5_2 <- power.curve(estimand="inter",
                         design.type="stratify",
-                        smple.size= seq(from=250, to=2000, by=50),
-                        accru=25,
+                        smple.size= seq(from=250, to=2000, by=150),
+                        accru=10,
                         LTFU=.02,
                         medianBpos=9,
                         medianBneg=9,
@@ -176,7 +87,7 @@ fig9.5.5_2 <- power.curve(estimand="inter",
 fig12.5.5 <- power.curve(estimand="inter",
                          design.type="stratify",
                          smple.size= seq(from=250, to=1000, by=50),
-                         accru=25,
+                         accru=10,
                          LTFU=.02,
                          medianBpos=12,
                          medianBneg=9,
@@ -189,7 +100,7 @@ fig12.5.5 <- power.curve(estimand="inter",
 fig15.5.5 <- power.curve(estimand="inter",
                          design.type="stratify",
                          smple.size= seq(from=250, to=1000, by=50),
-                         accru=25,
+                         accru=10,
                          LTFU=.02,
                          medianBpos=15,
                          medianBneg=9,
@@ -199,71 +110,7 @@ fig15.5.5 <- power.curve(estimand="inter",
                          phys.choice=.25,
                          rpos=0.5            # randomization to treatment b in the positives
 )
-fig21.5.5 <- power.curve(estimand="inter",
-                         design.type="stratify",
-                         smple.size= seq(from=250, to=1000, by=50),
-                         accru=25,
-                         LTFU=.02,
-                         medianBpos=21,
-                         medianBneg=9,
-                         medianApos=9,
-                         medianAneg=12,
-                         marker.pos=.5,
-                         phys.choice=.25,
-                         rpos=0.5            # randomization to treatment b in the positives
-)
-fig9.5.67 <- power.curve(estimand="inter",
-                         design.type="stratify",
-                         smple.size= seq(from=250, to=1000, by=50),
-                         accru=25,
-                         LTFU=.02,
-                         medianBpos=9,
-                         medianBneg=9,
-                         medianApos=9,
-                         medianAneg=12,
-                         marker.pos=.5,
-                         phys.choice=.25,
-                         rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.5.67 <- power.curve(estimand="inter",
-                          design.type="stratify",
-                          smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
-                          LTFU=.02,
-                          medianBpos=12,
-                          medianBneg=9,
-                          medianApos=9,
-                          medianAneg=12,
-                          marker.pos=.5,
-                          phys.choice=.25,
-                          rpos=0.67            # randomization to treatment b in the positives
-)
-fig15.5.67 <- power.curve(estimand="inter",
-                          design.type="stratify",
-                          smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
-                          LTFU=.02,
-                          medianBpos=15,
-                          medianBneg=9,
-                          medianApos=9,
-                          medianAneg=12,
-                          marker.pos=.5,
-                          phys.choice=.25,
-                          rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.5.67 <- power.curve(estimand="inter",
-                          design.type="stratify",
-                          smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
-                          LTFU=.02,
-                          medianBpos=21,
-                          medianBneg=9,
-                          medianApos=9,
-                          medianAneg=12,
-                          marker.pos=.5,
-                          phys.choice=.25,
-                          rpos=0.67            # randomization to treatment b in the positives
-)
+
 
 diff.fig <- ggarrange(fig9.25.5_2, fig12.25.5, fig15.25.5,
                   fig9.5.5_2, fig12.5.5, fig15.5.5, 
@@ -273,375 +120,60 @@ annotate_figure(diff.fig,
                 top=text_grob("Median Survival for Positive Patients on Treatment B
                     9 months                                               12 months                                             15 months          ", size=12),
                 left=text_grob("Proportion of Biomarker Positive Patients
-     0.5                                                     0.25", size=12, rot=90))
+                        0.5                                          0.25", size=12, rot=90),
+                bottom=text_grob("Figure 3: Power of the Biomarker Stratified Design 
+to Detect Differential Treatment Effect by Number of Events: 
+Red=HR, Blue=RMST, Green=SD", size=15))
 
 
 #### creating the figure for single subgroup effect
 
-fig9.25 <- power.curve(estimand="subgrp",
-                          design.type="enrich",
-                          smple.size= seq(from=250, to=1000, by=50),
-                          accru=25,
-                          LTFU=.02,
-                          medianBpos=9,
-                          medianBneg=9,
-                          medianApos=9,
-                          medianAneg=12,
-                          marker.pos=.25,
-                          phys.choice=.25,
-                          rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.25 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=12,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.25,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
-fig15.25 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=15,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.25,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.25 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=21,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.25,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.5 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=9,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.5,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
 fig12.5 <- power.curve(estimand="subgrp",
                       design.type="enrich",
                       smple.size= seq(from=50, to=800, by=50),
-                      accru=25,
+                      accru=10,
                       LTFU=.02,
                       medianBpos=12,
                       medianBneg=9,
                       medianApos=9,
                       medianAneg=12,
-                      marker.pos=.5,
+                      marker.pos=.9,
                       phys.choice=.25,
                       rpos=0.67            # randomization to treatment b in the positives
 )
 fig15.5 <- power.curve(estimand="subgrp",
                       design.type="enrich",
                       smple.size= seq(from=50, to=800, by=50),
-                      accru=25,
+                      accru=10,
                       LTFU=.02,
                       medianBpos=15,
                       medianBneg=9,
                       medianApos=9,
                       medianAneg=12,
-                      marker.pos=.5,
+                      marker.pos=.9,
                       phys.choice=.25,
                       rpos=0.67            # randomization to treatment b in the positives
 )
-fig21.5 <- power.curve(estimand="subgrp",
-                      design.type="enrich",
-                      smple.size= seq(from=250, to=1000, by=50),
-                      accru=25,
-                      LTFU=.02,
-                      medianBpos=21,
-                      medianBneg=9,
-                      medianApos=9,
-                      medianAneg=12,
-                      marker.pos=.5,
-                      phys.choice=.25,
-                      rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.75 <- power.curve(estimand="subgrp",
-                      design.type="enrich",
-                      smple.size= seq(from=250, to=1000, by=50),
-                      accru=25,
-                      LTFU=.02,
-                      medianBpos=9,
-                      medianBneg=9,
-                      medianApos=9,
-                      medianAneg=12,
-                      marker.pos=.75,
-                      phys.choice=.25,
-                      rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.75 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=12,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.75,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
-fig15.75 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=15,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.75,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.75 <- power.curve(estimand="subgrp",
-                       design.type="enrich",
-                       smple.size= seq(from=250, to=1000, by=50),
-                       accru=25,
-                       LTFU=.02,
-                       medianBpos=21,
-                       medianBneg=9,
-                       medianApos=9,
-                       medianAneg=12,
-                       marker.pos=.75,
-                       phys.choice=.25,
-                       rpos=0.67            # randomization to treatment b in the positives
-)
+
 subgrp.fig <- ggarrange(fig12.5, fig15.5,
                       ncol=2, nrow=1)
 
 annotate_figure(subgrp.fig, 
                 top=text_grob("Median Survival for Positive Patients on Treatment B
                           12 months                                                     15 months                  ", size=12),
+                bottom=text_grob("Figure 2: Power of the Enrichment Design 
+to Detect Treatment Effect for Biomarker 
+Positive Patients by Number of Events: 
+Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
                 )
 
 ### creating the power figure for clinical utility
-fig9.25.0.clin <- power.curve(estimand="clin",
-                        design.type="strategy",
-                        smple.size= seq(from=500, to=3000, by=250),
-                        accru=25,
-                        LTFU=.02,
-                        medianBpos=9,
-                        medianBneg=9,
-                        medianApos=9,
-                        medianAneg=12,
-                        marker.pos=.25,
-                        phys.choice=0,
-                        rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.25.0.clin <- power.curve(estimand="clin",
-                              design.type="strategy",
-                              smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
-                              LTFU=.02,
-                              medianBpos=12,
-                              medianBneg=9,
-                              medianApos=9,
-                              medianAneg=12,
-                              marker.pos=.25,
-                              phys.choice=0,
-                              rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.25.0.clin <- power.curve(estimand="clin",
-                              design.type="strategy",
-                              smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
-                              LTFU=.02,
-                              medianBpos=21,
-                              medianBneg=9,
-                              medianApos=9,
-                              medianAneg=12,
-                              marker.pos=.25,
-                              phys.choice=0,
-                              rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.25.25.clin <- power.curve(estimand="clin",
-                              design.type="strategy",
-                              smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
-                              LTFU=.02,
-                              medianBpos=9,
-                              medianBneg=9,
-                              medianApos=9,
-                              medianAneg=12,
-                              marker.pos=.25,
-                              phys.choice=0.25,
-                              rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.25.25.clin <- power.curve(estimand="clin",
-                               design.type="strategy",
-                               smple.size= seq(from=500, to=3000, by=250),
-                               accru=25,
-                               LTFU=.02,
-                               medianBpos=12,
-                               medianBneg=9,
-                               medianApos=9,
-                               medianAneg=12,
-                               marker.pos=.25,
-                               phys.choice=0.25,
-                               rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.25.25.clin <- power.curve(estimand="clin",
-                               design.type="strategy",
-                               smple.size= seq(from=500, to=3000, by=250),
-                               accru=25,
-                               LTFU=.02,
-                               medianBpos=21,
-                               medianBneg=9,
-                               medianApos=9,
-                               medianAneg=12,
-                               marker.pos=.25,
-                               phys.choice=0.25,
-                               rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.25.5.clin <- power.curve(estimand="clin",
-                               design.type="strategy",
-                               smple.size= seq(from=500, to=3000, by=250),
-                               accru=25,
-                               LTFU=.02,
-                               medianBpos=9,
-                               medianBneg=9,
-                               medianApos=9,
-                               medianAneg=12,
-                               marker.pos=.25,
-                               phys.choice=0.5,
-                               rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.25.5.clin <- power.curve(estimand="clin",
-                              design.type="strategy",
-                              smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
-                              LTFU=.02,
-                              medianBpos=12,
-                              medianBneg=9,
-                              medianApos=9,
-                              medianAneg=12,
-                              marker.pos=.25,
-                              phys.choice=0.5,
-                              rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.25.5.clin <- power.curve(estimand="clin",
-                              design.type="strategy",
-                              smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
-                              LTFU=.02,
-                              medianBpos=21,
-                              medianBneg=9,
-                              medianApos=9,
-                              medianAneg=12,
-                              marker.pos=.25,
-                              phys.choice=0.5,
-                              rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.25.75.clin <- power.curve(estimand="clin",
-                              design.type="strategy",
-                              smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
-                              LTFU=.02,
-                              medianBpos=9,
-                              medianBneg=9,
-                              medianApos=9,
-                              medianAneg=12,
-                              marker.pos=.25,
-                              phys.choice=0.75,
-                              rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.25.75.clin <- power.curve(estimand="clin",
-                               design.type="strategy",
-                               smple.size= seq(from=500, to=3000, by=250),
-                               accru=25,
-                               LTFU=.02,
-                               medianBpos=12,
-                               medianBneg=9,
-                               medianApos=9,
-                               medianAneg=12,
-                               marker.pos=.25,
-                               phys.choice=0.75,
-                               rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.25.75.clin <- power.curve(estimand="clin",
-                               design.type="strategy",
-                               smple.size= seq(from=500, to=3000, by=250),
-                               accru=25,
-                               LTFU=.02,
-                               medianBpos=21,
-                               medianBneg=9,
-                               medianApos=9,
-                               medianAneg=12,
-                               marker.pos=.25,
-                               phys.choice=0.75,
-                               rpos=0.67            # randomization to treatment b in the positives
-)
-fig9.5.0.clin <- power.curve(estimand="clin",
-                                design.type="strategy",
-                                smple.size= seq(from=500, to=3000, by=250),
-                                accru=25,
-                                LTFU=.02,
-                                medianBpos=9,
-                                medianBneg=9,
-                                medianApos=9,
-                                medianAneg=12,
-                                marker.pos=.5,
-                                phys.choice=0,
-                                rpos=0.67            # randomization to treatment b in the positives
-)
-fig12.5.0.clin <- power.curve(estimand="clin",
-                             design.type="strategy",
-                             smple.size= seq(from=500, to=3000, by=250),
-                             accru=25,
-                             LTFU=.02,
-                             medianBpos=12,
-                             medianBneg=9,
-                             medianApos=9,
-                             medianAneg=12,
-                             marker.pos=.5,
-                             phys.choice=0,
-                             rpos=0.67            # randomization to treatment b in the positives
-)
-fig21.5.0.clin <- power.curve(estimand="clin",
-                             design.type="strategy",
-                             smple.size= seq(from=500, to=3000, by=250),
-                             accru=25,
-                             LTFU=.02,
-                             medianBpos=21,
-                             medianBneg=9,
-                             medianApos=9,
-                             medianAneg=12,
-                             marker.pos=.5,
-                             phys.choice=0,
-                             rpos=0.67            # randomization to treatment b in the positives
-)
+
+
 fig9.5.25.clin <- power.curve(estimand="clin",
                              design.type="strategy",
                              smple.size= seq(from=500, to=3000, by=250),
-                             accru=25,
+                             accru=10,
                              LTFU=.02,
                              medianBpos=9,
                              medianBneg=9,
@@ -654,7 +186,7 @@ fig9.5.25.clin <- power.curve(estimand="clin",
 fig12.5.25.clin <- power.curve(estimand="clin",
                               design.type="strategy",
                               smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
+                              accru=10,
                               LTFU=.02,
                               medianBpos=12,
                               medianBneg=9,
@@ -667,7 +199,7 @@ fig12.5.25.clin <- power.curve(estimand="clin",
 fig21.5.25.clin <- power.curve(estimand="clin",
                               design.type="strategy",
                               smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
+                              accru=10,
                               LTFU=.02,
                               medianBpos=21,
                               medianBneg=9,
@@ -680,7 +212,7 @@ fig21.5.25.clin <- power.curve(estimand="clin",
 fig9.5.5.clin <- power.curve(estimand="clin",
                               design.type="strategy",
                               smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
+                              accru=10,
                               LTFU=.02,
                               medianBpos=9,
                               medianBneg=9,
@@ -693,7 +225,7 @@ fig9.5.5.clin <- power.curve(estimand="clin",
 fig12.5.5.clin <- power.curve(estimand="clin",
                              design.type="strategy",
                              smple.size= seq(from=500, to=3000, by=250),
-                             accru=25,
+                             accru=10,
                              LTFU=.02,
                              medianBpos=12,
                              medianBneg=9,
@@ -706,7 +238,7 @@ fig12.5.5.clin <- power.curve(estimand="clin",
 fig21.5.5.clin <- power.curve(estimand="clin",
                              design.type="strategy",
                              smple.size= seq(from=500, to=3000, by=250),
-                             accru=25,
+                             accru=10,
                              LTFU=.02,
                              medianBpos=21,
                              medianBneg=9,
@@ -719,7 +251,7 @@ fig21.5.5.clin <- power.curve(estimand="clin",
 fig9.5.75.clin <- power.curve(estimand="clin",
                              design.type="strategy",
                              smple.size= seq(from=500, to=3000, by=250),
-                             accru=25,
+                             accru=10,
                              LTFU=.02,
                              medianBpos=9,
                              medianBneg=9,
@@ -732,7 +264,7 @@ fig9.5.75.clin <- power.curve(estimand="clin",
 fig12.5.75.clin <- power.curve(estimand="clin",
                               design.type="strategy",
                               smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
+                              accru=10,
                               LTFU=.02,
                               medianBpos=12,
                               medianBneg=9,
@@ -745,7 +277,7 @@ fig12.5.75.clin <- power.curve(estimand="clin",
 fig21.5.75.clin <- power.curve(estimand="clin",
                               design.type="strategy",
                               smple.size= seq(from=500, to=3000, by=250),
-                              accru=25,
+                              accru=10,
                               LTFU=.02,
                               medianBpos=21,
                               medianBneg=9,
@@ -765,7 +297,10 @@ annotate_figure(clin.fig,
                 top=text_grob("Proportion of Physician's Choice Equalling Biomarker-directed Strategy
          0.25                                                      0.5                                                     0.75", size=12),
                 left=text_grob("Median Survival in Positive Patients on Treatment B
-21 months                                 12 months                               9 months", size=12, rot=90))
+                  21 months                    12 months                      9 months", size=12, rot=90),
+                bottom=text_grob("Figure 4: Power of the Strategy Design 
+to Detect Clinical Utility for by Number of Events: 
+Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15))
 
 #### creating individual summary tables for each scenario
 
@@ -779,7 +314,7 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          estimand="inter",
          design.type="stratify",
          smple.size= 2000,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -796,7 +331,7 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          estimand="inter",
          design.type="stratify",
          smple.size= 2000,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -813,7 +348,7 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          estimand="inter",
          design.type="stratify",
          smple.size= 300,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=15,
          medianBneg=15,
@@ -830,7 +365,7 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          estimand="inter",
          design.type="stratify",
          smple.size= 400,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=15,
          medianBneg=15,
@@ -847,7 +382,7 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          estimand="inter",
          design.type="stratify",
          smple.size= 700,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=12,
@@ -864,7 +399,7 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          estimand="inter",
          design.type="stratify",
          smple.size= 500,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=12,
@@ -882,24 +417,8 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.5)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.5",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=1500, to=2000, by=50),
-         accru=25,
+         smple.size= seq(from=250, to=2000, by=50),
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -909,6 +428,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          phys.choice=.25,
          rpos=0.5)
 
+
 fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 12, Proportion of 
          Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
@@ -916,7 +436,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          estimand="inter",
          design.type="stratify",
          smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=9,
@@ -932,109 +452,13 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          estimand="inter",
          design.type="stratify",
          smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=15,
          medianBneg=9,
          medianApos=9,
          medianAneg=12,
          marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.5)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.5",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.5)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 15, Proportion of 
-         Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=15,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.5",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
          phys.choice=.25,
          rpos=0.5)
 
@@ -1044,8 +468,8 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=1500, to=2000, by=50),
-         accru=25,
+         smple.size= seq(from=250, to=2000, by=50),
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -1054,6 +478,8 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          marker.pos=.5,
          phys.choice=.25,
          rpos=0.5)
+
+
 fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 12, Proportion of 
          Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
@@ -1061,7 +487,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          estimand="inter",
          design.type="stratify",
          smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=9,
@@ -1077,7 +503,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          estimand="inter",
          design.type="stratify",
          smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=15,
          medianBneg=9,
@@ -1086,86 +512,6 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          marker.pos=.5,
          phys.choice=.25,
          rpos=0.5)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.5",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.5)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 15, Proportion of 
-         Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=15,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.67)
-fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
-         Treatment B is 0.67",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.67)
 
 
 ##### clinical utility scenarios
@@ -1178,7 +524,7 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          estimand="clin",
          design.type="strategy",
          smple.size= 3000,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -1195,7 +541,7 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          estimand="clin",
          design.type="strategy",
          smple.size= 1000,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=9,
@@ -1212,7 +558,7 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          estimand="clin",
          design.type="strategy",
          smple.size= 2000,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=9,
@@ -1229,7 +575,7 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          estimand="clin",
          design.type="strategy",
          smple.size= 500,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=21,
          medianBneg=9,
@@ -1246,7 +592,7 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          estimand="clin",
          design.type="strategy",
          smple.size= 750,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=21,
          medianBneg=9,
@@ -1263,7 +609,7 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          estimand="clin",
          design.type="strategy",
          smple.size= 3000,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=21,
          medianBneg=9,
@@ -1275,86 +621,8 @@ fintable(caption="Clinical Utility Type 1 Error Rate:
          type1=TRUE)
 
 ## operating characteristic tables
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0",
-         estimand="clin",
-         design.type="strategy",
-         smple.size=seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.25",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.25,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.5",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.5,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.75",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0,
-         rpos=0.67)
+
+
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 9, Proportion of 
          Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
@@ -1362,7 +630,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -1378,7 +646,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
@@ -1394,225 +662,66 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=9,
          medianBneg=9,
          medianApos=9,
          medianAneg=12,
          marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.25",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.25,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.5",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.5,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.75",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.25",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.25,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.5",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.5,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.75",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.25",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.25,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.5",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.5,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
-         Positive Patients in 0.25, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.75",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
          phys.choice=0.75,
          rpos=0.67)
 
-###restart here
+
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21, Proportion of 
+         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
          Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0",
+         Physician's Choice of Treatment is 0.25",
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
-         medianBpos=21,
+         medianBpos=12,
          medianBneg=9,
          medianApos=9,
          medianAneg=12,
          marker.pos=.5,
-         phys.choice=0,
+         phys.choice=0.25,
          rpos=0.67)
+fintable(caption="Clinical Utility Operating Characteristics Summary: 
+         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
+         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
+         Physician's Choice of Treatment is 0.5",
+         estimand="clin",
+         design.type="strategy",
+         smple.size= seq(from=500, to=3000, by=250),
+         accru=10,
+         LTFU=.02,
+         medianBpos=12,
+         medianBneg=9,
+         medianApos=9,
+         medianAneg=12,
+         marker.pos=.5,
+         phys.choice=0.5,
+         rpos=0.67)
+fintable(caption="Clinical Utility Operating Characteristics Summary: 
+         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
+         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
+         Physician's Choice of Treatment is 0.75",
+         estimand="clin",
+         design.type="strategy",
+         smple.size= seq(from=500, to=3000, by=250),
+         accru=10,
+         LTFU=.02,
+         medianBpos=12,
+         medianBneg=9,
+         medianApos=9,
+         medianAneg=12,
+         marker.pos=.5,
+         phys.choice=0.75,
+         rpos=0.67)
+
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 21, Proportion of 
          Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
@@ -1620,7 +729,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=21,
          medianBneg=9,
@@ -1636,7 +745,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=21,
          medianBneg=9,
@@ -1652,7 +761,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          estimand="clin",
          design.type="strategy",
          smple.size= seq(from=500, to=3000, by=250),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=21,
          medianBneg=9,
@@ -1669,7 +778,7 @@ fintable(caption="Single Subgroup Treatment Effect Type 1 Error Rate:
          estimand="subgrp",
          design.type="enrich",
          smple.size= 550,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=12,
@@ -1685,7 +794,7 @@ fintable(caption="Single Subgroup Treatment Effect Type 1 Error Rate:
          estimand="subgrp",
          design.type="enrich",
          smple.size= 150,
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=15,
          medianBneg=12,
@@ -1696,187 +805,39 @@ fintable(caption="Single Subgroup Treatment Effect Type 1 Error Rate:
          rpos=0.5,
          type1=TRUE)
 
-### getting the operating characteristics summaies
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9 and Proportion of 
-         Positive Patients is 0.25",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9 and Proportion of 
-         Positive Patients is 0.5",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9 and Proportion of 
-         Positive Patients is 0.75",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.75,
-         phys.choice=0.75,
-         rpos=0.67)
+### getting the operating characteristics summaries
+
 fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 12 and Proportion of 
          Positive Patients is 0.25",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12 and Proportion of 
-         Positive Patients is 0.5",
          estimand="subgrp",
          design.type="enrich",
          smple.size= seq(from=50, to=800, by=50),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=12,
          medianBneg=9,
          medianApos=9,
          medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12 and Proportion of 
-         Positive Patients is 0.75",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.75,
-         phys.choice=0.75,
-         rpos=0.67)
+         marker.pos=.9,
+         phys.choice=0.5,
+         rpos=0.5)
+
 fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 15 and Proportion of 
          Positive Patients is 0.25",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=15,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 15 and Proportion of 
-         Positive Patients is 0.5",
          estimand="subgrp",
          design.type="enrich",
          smple.size= seq(from=50, to=800, by=50),
-         accru=25,
+         accru=10,
          LTFU=.02,
          medianBpos=15,
          medianBneg=9,
          medianApos=9,
          medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 15 and Proportion of 
-         Positive Patients is 0.75",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=15,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.75,
-         phys.choice=0.75,
-         rpos=0.67)
-##restart here
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21 and Proportion of 
-         Positive Patients is 0.25",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21 and Proportion of 
-         Positive Patients is 0.5",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
-fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 21 and Proportion of 
-         Positive Patients is 0.75",
-         estimand="subgrp",
-         design.type="enrich",
-         smple.size= seq(from=250, to=1000, by=50),
-         accru=25,
-         LTFU=.02,
-         medianBpos=21,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.75,
-         phys.choice=0.75,
-         rpos=0.67)
+         marker.pos=.9,
+         phys.choice=0.5,
+         rpos=0.5)
+
 
 

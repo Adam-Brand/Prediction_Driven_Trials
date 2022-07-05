@@ -9,7 +9,7 @@
 # OUTPUT: 
 #        
 
-# R VERSION: 3.6.1
+# R VERSION: 4.0.5
 #==============================================================================
 #Notes: 
 ### this program simulates different scenarios for the estimand for interaction term
@@ -22,16 +22,16 @@
 ## sourcing the source program
 source("Programs/sim_source.R")
 
-# selecting a vecotr of sample sizes
+# selecting a vector of sample sizes
 smple.size <- seq(from=250, to=1000, by=50)
 
-Bpos <- c(9,12,15,21)
+Bpos <- c(9,12,15)
 Bneg <- 9
 Apos <- 9
 Aneg <- 12
 M <- c(0.25,.5)
 LTFU <- .02
-rpos <- c(0.5, 0.67)
+rpos <- 0.5
 
 
 
@@ -57,15 +57,15 @@ for (j in 1:length(Bpos)){
     rn <- 1-rp
 
 
-accru <- 25
+accru <- 10
 
 
-set.seed(12)
+set.seed(22456785)
 #getting results for each smple.size based on 1000 replications
 for (i in 1:length(smple.size)){
   #undebug(eval.scen)
   x <- eval.scen(estimand="inter", 
-                 reps=100, 
+                 reps=1000, 
                  max_enroll=4000,  
                  n=smple.size[i], 
                  num_interim=1, 
@@ -162,15 +162,15 @@ for (j in 1:length(Bpos)){
       rn <- 1-rp
       
       
-      accru <- 25
+      accru <- 10
       
       
-      set.seed(12)
+      set.seed(22356785)
       #getting results for each smple.size based on 1000 replications
       for (i in 1:length(smple.size)){
         #undebug(eval.scen)
         x <- eval.scen(estimand="inter", 
-                       reps=100, 
+                       reps=1000, 
                        max_enroll=6000,  
                        n=smple.size[i], 
                        num_interim=1, 
@@ -228,7 +228,6 @@ for (j in 1:length(Bpos)){
     }}}
 
 
-
 ### function calls to get type 1 error
 
 # selecting a vecotr of sample sizes
@@ -246,54 +245,57 @@ rpos <- 0.5
 rp <- rpos
 rn <- 1-rp
 
-set.seed(1212)
-    for (i in 1:length(smple.size)){ 
-      Mpos <- M[i]
-      type1_int <- eval.scen(estimand="inter", 
-                             reps=1000, 
-                             max_enroll=6000,  
-                             n=smple.size[i], 
-                             num_interim=1, 
-                             int_timing=1, 
-                             alpha=.025, 
-                             low_err=0.1,  
-                             bound.type=c(1,1), 
-                             # time.points=time.point,    
-                             # RM.times=time.point, 
-                             
-                             accru.rate=accru,           
-                             loss.fu.rate=LTFU,          
-                             marker.pos=Mpos,           
-                             rand.arm=.5,             
-                             rand.pos=rp,            
-                             rand.neg=rn,             
-                             rand=0.5,
-                             phys.choice.pos=.5,        
-                             phys.choice.neg=.5,
-                             
-                             medposB=Bpos[i],             
-                             distrposB="exp",           
-                             shapeposB=1,         
-                             
-                             medposA=Apos[i],             
-                             distrposA="exp",           
-                             shapeposA=1,           
-                             
-                             mednegB=Bneg[i],             
-                             distrnegB="exp",           
-                             shapenegB=1,           
-                             
-                             mednegA=Aneg[i],             
-                             distrnegA="exp",          
-                             shapenegA=1          
-      )
-      
-      temp_stratify_tp1 <- type1_int$inter_stratify
-      
-      filename_type1 <- paste("inter", "stratify","tpe1",  smple.size[i], "accru", accru,"exp", 
-                              "Bpos",Bpos[i], "Apos", Apos[i], "Bneg",Bneg[i], "Aneg",  Aneg[i],
-                              "M", Mpos, "LTFU", LTFU, "rpos",rp, "rds", sep=".")
-      
-      
-      saveRDS(temp_stratify_tp1, file=paste("Results","inter",filename_type1, sep="/"))
-    }
+set.seed(22456785)
+for (i in 1:length(smple.size)){ 
+  Mpos <- M[i]
+  type1_int <- eval.scen(estimand="inter", 
+                         reps=1000, 
+                         max_enroll=6000,  
+                         n=smple.size[i], 
+                         num_interim=1, 
+                         int_timing=1, 
+                         alpha=.025, 
+                         low_err=0.1,  
+                         bound.type=c(1,1), 
+                         # time.points=time.point,    
+                         # RM.times=time.point, 
+                         
+                         accru.rate=accru,           
+                         loss.fu.rate=LTFU,          
+                         marker.pos=Mpos,           
+                         rand.arm=.5,             
+                         rand.pos=rp,            
+                         rand.neg=rn,             
+                         rand=0.5,
+                         phys.choice.pos=.5,        
+                         phys.choice.neg=.5,
+                         
+                         medposB=Bpos[i],             
+                         distrposB="exp",           
+                         shapeposB=1,         
+                         
+                         medposA=Apos[i],             
+                         distrposA="exp",           
+                         shapeposA=1,           
+                         
+                         mednegB=Bneg[i],             
+                         distrnegB="exp",           
+                         shapenegB=1,           
+                         
+                         mednegA=Aneg[i],             
+                         distrnegA="exp",          
+                         shapenegA=1          
+  )
+  
+  temp_stratify_tp1 <- type1_int$inter_stratify
+  
+  filename_type1 <- paste("inter", "stratify","tpe1",  smple.size[i], "accru", accru,"exp", 
+                          "Bpos",Bpos[i], "Apos", Apos[i], "Bneg",Bneg[i], "Aneg",  Aneg[i],
+                          "M", Mpos, "LTFU", LTFU, "rpos",rp, "rds", sep=".")
+  
+  
+  saveRDS(temp_stratify_tp1, file=paste("Results","inter",filename_type1, sep="/"))
+}
+
+
+

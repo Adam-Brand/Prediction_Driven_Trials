@@ -9,7 +9,7 @@
 # OUTPUT: 
 #        
 
-# R VERSION: 3.6.1
+# R VERSION: 4.0.5
 #==============================================================================
 #Notes: 
 ### this program simulates different scenarios for the estimand for clinical utility
@@ -22,16 +22,16 @@
 ## sourcing the source program
 source("Programs/sim_source.R")
 
-# selecting a vecotr of sample sizes
+# selecting a vector of sample sizes
 smple.size <- seq(from=500, to=3000, by=250)
 
 Bpos <- c(9,12,21)
 Bneg <- 9
 Apos <- 9
 Aneg <- 12
-M <- c(0.25,.5)
+M <- 0.5
 LTFU <- .02
-PC <- c(0,.25,.5,.75)
+PC <- c(.25,.5,.75)
 
 
 for (j in 1:length(Bpos)){
@@ -55,16 +55,16 @@ for (j in 1:length(Bpos)){
     pc <- PC[s]
     
 
-accru <- 25
+accru <- 10
 
 
 
-set.seed(12)
+set.seed(22456785)
 #getting results for each smple.size based on 1000 replications
 for (i in 1:length(smple.size)){
   #undebug(eval.scen)
   x <- eval.scen(estimand="clin", 
-                 reps=100, 
+                 reps=1000, 
                  max_enroll=8000,  
                  n=smple.size[i], 
                  num_interim=1, 
@@ -136,7 +136,7 @@ M <- 0.5
 LTFU <- .02
 
 
-set.seed(1212)
+set.seed(22456785)
 for (i in 1:length(smple.size)){
   Mpos <- M
 type1_clin <- eval.scen(estimand="clin", 

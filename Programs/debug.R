@@ -1,3 +1,7 @@
+###### this is a debug program; is not use for simulation or analysis
+
+### this is a throw away program
+
 source("Programs/sim_source.R")
 
 filename_enrich <- paste("subgrp", "enrich", smple.size[2], "exp", 
@@ -6,7 +10,9 @@ saveRDS(test2, file=paste("Results", "subgrp",filename_enrich, sep="/"))
 
 test1 <- readRDS("Results/clin/clin.strategy.500.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.PC.0.rds")
 test2 <- readRDS("Results/clin/Run1/clin.strategy.500.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.PC.0.rds")
-test3 <- readRDS("Results/subgrp/subgrp.stratify.550.accru.25.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+test3 <- readRDS("Results/subgrp/subgrp.enrich.type1.550.accru.10.exp.Bpos.12.Apos.12.Bneg.12.Aneg.9.M..75.LTFU.0.02.rds")
+
+data <- test3
 
 test3 <- x$inter_modstrat
 

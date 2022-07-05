@@ -9,7 +9,7 @@
 # OUTPUT: 
 #        
 
-# R VERSION: 3.6.1
+# R VERSION: 4.0.5
 #==============================================================================
 #Notes: 
 ### uses functions within gsDesign package in R; some explanations of used functions below
@@ -46,7 +46,7 @@ sim.trial <- function(data, # input survival data from our data generating funct
                       ){
   
   # getting the pvalue cutoffs for the analysis times
-  x <- bounds(t=int_timing, # the percentage of information times, last one always =1
+  x <- ldBounds(t=int_timing, # the percentage of information times, last one always =1
               iuse=bound.type,             # indicates O'brien fleming boundaries for both upper and lower boundaries
               alpha=c(low_err, alpha))     # the alpas for the lower and upper boundaries, respectively
   # saving the upper pvalue cutoffs for each interim
@@ -265,10 +265,26 @@ sim.trial <- function(data, # input survival data from our data generating funct
   }
   
   # computing the pseudo observations and pseudomean
+  # calculating pseudo time as the minimum of the longest follow up time between treatment groups
+  # In the group with the smaller maximum follow-up time, if the last obs is censored, use that time
+  # else use the max follow-up time in the other group
+  trtB <- temp[temp$trtn==1,]
+  trtB <- trtB[order(trtB$surv.time),]
+  maxB <- max(trtB$surv.time)
+  trtA <- temp[temp$trtn==0,]
+  trtA <- trtA[order(trtA$surv.time),]
+  maxA <- max(trtA$surv.time)
+  if ((maxA < maxB) & trtA$event[length(trtA[,1])]==1){
+    pseudo_time <- maxB
+  }
+  else if ((maxA > maxB) & trtB$event[length(trtB[,1])]==0){
+    pseudo_time <- maxB
+  }
+  else {pseudo_time <- maxA}
+  
   pseudo <- pseudosurv(temp$surv.time, temp$event, tmax = pseudot.ratio)
   ipseudo <- pseudo$pseudo[,ncol(pseudo$pseudo)]
-  pseudom <- pseudomean(temp$surv.time, temp$event)
-  pseudo_time <- max(temp$surv.time)
+  pseudom <- pseudomean(temp$surv.time, temp$event, tmax=pseudo_time)
   temp <- data.frame(cbind(temp, ipseudo=ipseudo, pseudom=pseudom))
   temp_pos <- temp[temp$marker.stat==1,]
   temp_neg <- temp[temp$marker.stat==0,]
@@ -304,12 +320,12 @@ sim.trial <- function(data, # input survival data from our data generating funct
    # M <- length(time.points)
    # for (i in 1:M){
       fit <- geese(formula=ipseudo ~ trt, data=temp, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.a <- round(cbind(mean=fit$beta, SE=sqrt(diag(fit$vbeta.ajs)), Z=fit$beta/sqrt(diag(fit$vbeta.ajs)),
                                 PVal = 2-2*pnorm(abs(fit$beta/sqrt(diag(fit$vbeta.ajs))))),4)
-      ratio_mean <- exp(sum_fit.a["trtB","mean"])
-      ratio_lower <- exp(sum_fit.a["trtB","mean"] - (sum_fit.a["trtB","SE"]*qnorm(1-alpha)))
-      ratio_upper <- exp(sum_fit.a["trtB","mean"] + (sum_fit.a["trtB","SE"]*qnorm(1-alpha)))
+      ratio_mean <- sum_fit.a["trtB","mean"]
+      ratio_lower <- sum_fit.a["trtB","mean"] - (sum_fit.a["trtB","SE"]*qnorm(1-alpha))
+      ratio_upper <- sum_fit.a["trtB","mean"] + (sum_fit.a["trtB","SE"]*qnorm(1-alpha))
       ratio_pval <- sum_fit.a["trtB","PVal"]
       ratio <- c(ratio, ratio_mean, ratio_lower,ratio_upper, ratio_pval)
    # }
@@ -363,52 +379,52 @@ sim.trial <- function(data, # input survival data from our data generating funct
    # for (i in 1:M){
       # getting ratio of B vs A in the positives
       fit_pos <- geese(formula=ipseudo ~ trt, data=temp_pos, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.a <- round(cbind(mean=fit_pos$beta, SE=sqrt(diag(fit_pos$vbeta.ajs)), Z=fit_pos$beta/sqrt(diag(fit_pos$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_pos$beta/sqrt(diag(fit_pos$vbeta.ajs))))),4)
-      ratio_mean_pos <- exp(sum_fit.a["trtB","mean"])
-      ratio_lower_pos <- exp(sum_fit.a["trtB","mean"] - (sum_fit.a["trtB","SE"]*qnorm(1-alpha)))
-      ratio_upper_pos <- exp(sum_fit.a["trtB","mean"] + (sum_fit.a["trtB","SE"]*qnorm(1-alpha)))
+      ratio_mean_pos <- sum_fit.a["trtB","mean"]
+      ratio_lower_pos <- sum_fit.a["trtB","mean"] - (sum_fit.a["trtB","SE"]*qnorm(1-alpha))
+      ratio_upper_pos <- sum_fit.a["trtB","mean"] + (sum_fit.a["trtB","SE"]*qnorm(1-alpha))
       ratio_pval_pos <- sum_fit.a["trtB","PVal"]
       ratio_pos <- c(ratio_pos, ratio_mean_pos, ratio_lower_pos,ratio_upper_pos, ratio_pval_pos)
       # getting ratio of B vs A in the negatives
       fit_neg <- geese(formula=ipseudo ~ trt, data=temp_neg, id=id, scale.fix=TRUE, 
-                       family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                       family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.b <- round(cbind(mean=fit_neg$beta, SE=sqrt(diag(fit_neg$vbeta.ajs)), Z=fit_neg$beta/sqrt(diag(fit_neg$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_neg$beta/sqrt(diag(fit_neg$vbeta.ajs))))),4)
-      ratio_mean_neg <- exp(sum_fit.b["trtB","mean"])
-      ratio_lower_neg <- exp(sum_fit.b["trtB","mean"] - (sum_fit.b["trtB","SE"]*qnorm(1-alpha)))
-      ratio_upper_neg <- exp(sum_fit.b["trtB","mean"] + (sum_fit.b["trtB","SE"]*qnorm(1-alpha)))
+      ratio_mean_neg <- sum_fit.b["trtB","mean"]
+      ratio_lower_neg <- sum_fit.b["trtB","mean"] - (sum_fit.b["trtB","SE"]*qnorm(1-alpha))
+      ratio_upper_neg <- sum_fit.b["trtB","mean"] + (sum_fit.b["trtB","SE"]*qnorm(1-alpha))
       ratio_pval_neg <- sum_fit.b["trtB","PVal"]
       ratio_neg <- c(ratio_neg, ratio_mean_neg, ratio_lower_neg,ratio_upper_neg, ratio_pval_neg)
       # getting ratio of B vs A overall
       fit <- geese(formula=ipseudo ~ trt, data=temp, id=id, scale.fix=TRUE, 
-                       family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                       family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.c <- round(cbind(mean=fit$beta, SE=sqrt(diag(fit$vbeta.ajs)), Z=fit$beta/sqrt(diag(fit$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit$beta/sqrt(diag(fit$vbeta.ajs))))),4)
-      ratio_mean <- exp(sum_fit.c["trtB","mean"])
-      ratio_lower <- exp(sum_fit.c["trtB","mean"] - (sum_fit.c["trtB","SE"]*qnorm(1-alpha)))
-      ratio_upper <- exp(sum_fit.c["trtB","mean"] + (sum_fit.c["trtB","SE"]*qnorm(1-alpha)))
+      ratio_mean <- sum_fit.c["trtB","mean"]
+      ratio_lower <- sum_fit.c["trtB","mean"] - (sum_fit.c["trtB","SE"]*qnorm(1-alpha))
+      ratio_upper <- sum_fit.c["trtB","mean"] + (sum_fit.c["trtB","SE"]*qnorm(1-alpha))
       ratio_pval <- sum_fit.c["trtB","PVal"]
       ratio <- c(ratio, ratio_mean, ratio_lower,ratio_upper, ratio_pval)
       # getting ratio of interaction term
       fit_int <- geese(formula=ipseudo ~ trt*Marker, data=temp, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.d <- round(cbind(mean=fit_int$beta, SE=sqrt(diag(fit_int$vbeta.ajs)), Z=fit_int$beta/sqrt(diag(fit_int$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_int$beta/sqrt(diag(fit_int$vbeta.ajs))))),4)
-      ratio_mean_int <- exp(sum_fit.d["trtB:Marker+","mean"])
-      ratio_lower_int <- exp(sum_fit.d["trtB:Marker+","mean"] - (sum_fit.d["trtB:Marker+","SE"]*qnorm(1-alpha)))
-      ratio_upper_int <- exp(sum_fit.d["trtB:Marker+","mean"] + (sum_fit.d["trtB:Marker+","SE"]*qnorm(1-alpha)))
+      ratio_mean_int <- sum_fit.d["trtB:Marker+","mean"]
+      ratio_lower_int <- sum_fit.d["trtB:Marker+","mean"] - (sum_fit.d["trtB:Marker+","SE"]*qnorm(1-alpha))
+      ratio_upper_int <- sum_fit.d["trtB:Marker+","mean"] + (sum_fit.d["trtB:Marker+","SE"]*qnorm(1-alpha))
       ratio_pval_int <- sum_fit.d["trtB:Marker+","PVal"]
       ratio_int <- c(ratio_int, ratio_mean_int, ratio_lower_int,ratio_upper_int, ratio_pval_int)
       # getting ratio between arms
       fit_arm <- geese(formula=ipseudo ~ arm, data=temp, id=id, scale.fix=TRUE, 
-                       family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                       family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.e <- round(cbind(mean=fit_arm$beta, SE=sqrt(diag(fit_arm$vbeta.ajs)), Z=fit_arm$beta/sqrt(diag(fit_arm$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit_arm$beta/sqrt(diag(fit_arm$vbeta.ajs))))),4)
-      ratio_mean_arm <- exp(sum_fit.e["armstrat","mean"])
-      ratio_lower_arm <- exp(sum_fit.e["armstrat","mean"] - (sum_fit.e["armstrat","SE"]*qnorm(1-alpha)))
-      ratio_upper_arm <- exp(sum_fit.e["armstrat","mean"] + (sum_fit.e["armstrat","SE"]*qnorm(1-alpha)))
+      ratio_mean_arm <- sum_fit.e["armstrat","mean"]
+      ratio_lower_arm <- sum_fit.e["armstrat","mean"] - (sum_fit.e["armstrat","SE"]*qnorm(1-alpha))
+      ratio_upper_arm <- sum_fit.e["armstrat","mean"] + (sum_fit.e["armstrat","SE"]*qnorm(1-alpha))
       ratio_pval_arm <- sum_fit.e["armstrat","PVal"]
       ratio_arm <- c(ratio_arm, ratio_mean_arm, ratio_lower_arm,ratio_upper_arm, ratio_pval_arm)
    # }
@@ -543,12 +559,12 @@ sim.trial <- function(data, # input survival data from our data generating funct
    # M <- length(time.points)
    # for (i in 1:M){
       fit.rat <- geese(formula=ipseudo ~ arm, data=temp, id=id, scale.fix=TRUE, 
-                   family=gaussian, jack=TRUE, mean.link="log", corstr="independence")
+                   family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
       sum_fit.rat <- round(cbind(mean=fit.rat$beta, SE=sqrt(diag(fit.rat$vbeta.ajs)), Z=fit.rat$beta/sqrt(diag(fit.rat$vbeta.ajs)),
                                PVal = 2-2*pnorm(abs(fit.rat$beta/sqrt(diag(fit.rat$vbeta.ajs))))),4)
-      ratio_mean_arm <- exp(sum_fit.rat["armstrat","mean"])
-      ratio_lower_arm <- exp(sum_fit.rat["armstrat","mean"] - (sum_fit.rat["armstrat","SE"]*qnorm(1-alpha)))
-      ratio_upper_arm <- exp(sum_fit.rat["armstrat","mean"] + (sum_fit.rat["armstrat","SE"]*qnorm(1-alpha)))
+      ratio_mean_arm <- sum_fit.rat["armstrat","mean"]
+      ratio_lower_arm <- sum_fit.rat["armstrat","mean"] - (sum_fit.rat["armstrat","SE"]*qnorm(1-alpha))
+      ratio_upper_arm <- sum_fit.rat["armstrat","mean"] + (sum_fit.rat["armstrat","SE"]*qnorm(1-alpha))
       ratio_pval_arm <- sum_fit.rat["armstrat","PVal"]
       ratio_arm <- c(ratio_arm, ratio_mean_arm, ratio_lower_arm,ratio_upper_arm, ratio_pval_arm)
    # }
@@ -629,179 +645,49 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
                        shapenegA=1           # shape parmeter for the weibull distribution; negatives, trtmt A
 ){
   
-  # creating the result data frame for the enirchment design results
-  cols_enrich <- 17+(4*1)+(4*1)+2
-  result_enrich <- data.frame(matrix(nrow=reps, ncol = cols_enrich))
-  names1_enrich <- NULL
-  names2_enrich <- NULL
-  for (j in 1:1){
-    for (i in 1:4){
-      if (i %% 4==1){
-        names1_enrich[(i+(4*(j-1)))] <- paste("ratio.mean")
-    }
-      else if (i %% 4==2){
-        names1_enrich[(i+(4*(j-1)))] <- paste("ratio.lower")
-    }
-      else if (i %% 4==3){
-        names1_enrich[(i+(4*(j-1)))] <- paste("ratio.upper")
-      }
-      else if (i %% 4==0){
-        names1_enrich[(i+(4*(j-1)))] <- paste("ratio.pval")
-      }
-    }
-  }
-  for (j in 1:1){
-    for (i in 1:4){
-      if (i %% 4==1){
-        names2_enrich[(i+(4*(j-1)))] <- paste("RMST.mean")
-    }
-      else if (i %% 4==2){
-        names2_enrich[(i+(4*(j-1)))] <- paste("RMST.lower")
-    }
-      else if (i %% 4==3){
-        names2_enrich[(i+(4*(j-1)))] <- paste("RMST.upper")
-      }
-      else if (i %% 4==0){
-        names2_enrich[(i+(4*(j-1)))] <- paste("RMST.pval")
-      }
-    }
-  }
-  colnames(result_enrich) <- c("enroll", "events", "analysis.time",
-                        "pvalue", "chisq", "upper.bound","lower.bound",
-                        "exp.diff", "stop.eff", "stop.fut", "medianA", "medianB","medianpos",
-                        "hr.mean", "hr.lower", "hr.upper","hr.pval" ,names1_enrich, names2_enrich, "pseudom.time", "pseudor.time")
-  
-  # creating the result data frame for the stratified design results
-  cols_strat <- 40+(20*1)+(20*1)+2
-  result_strat <- data.frame(matrix(nrow=reps, ncol = cols_strat))
-  names1_strat <- NULL
-  names2_strat <- NULL
-  for (j in 1:1){
-    for (i in 1:4){
-      if (i %% 4==1){
-        names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.mean")
-        names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.mean")
-        names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.mean")
-        names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.mean")
-        names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.mean")
-      }
-      else if (i %% 4==2){
-        names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.lower")
-        names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.lower")
-        names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.lower")#,time.points[j])
-        names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.lower")#,time.points[j])
-        names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.lower")#,time.points[j])
-      }
-      else if (i %% 4==3){
-        names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.upper")#,time.points[j])
-        names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.upper")#,time.points[j])
-        names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.upper")#,time.points[j])
-        names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.upper")#,time.points[j])
-        names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.upper")#,time.points[j])
-      }
-      else if (i %% 4==0){
-        names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.pval")#,time.points[j])
-        names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.pval")#,time.points[j])
-        names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.pval")#,time.points[j])
-        names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.pval")#,time.points[j])
-        names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.pval")#,time.points[j])
-      }
-    }
-  }
-  for (j in 1:1){#length(RM.times)){
-    for (i in 1:4){
-      if (i %% 4==1){
-        names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.mean")#,RM.times[j])
-        names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.mean")#,RM.times[j])
-        names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.mean")#,RM.times[j])
-        names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.mean")#,RM.times[j])
-        names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.mean")#,RM.times[j])
-      }
-      else if (i %% 4==2){
-        names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.lower")#,RM.times[j])
-        names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.lower")#,RM.times[j])
-        names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.lower")#,RM.times[j])
-        names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.lower")#,RM.times[j])
-        names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.lower")#,RM.times[j])
-      }
-      else if (i %% 4==3){
-        names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.upper")#,RM.times[j])
-        names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.upper")#,RM.times[j])
-        names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.upper")#,RM.times[j])
-        names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.upper")#,RM.times[j])
-        names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.upper")#,RM.times[j])
-      }
-      else if (i %% 4==0){
-        names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.pval")#,RM.times[j])
-        names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.pval")#,RM.times[j])
-        names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.pval")#,RM.times[j])
-        names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.pval")#,RM.times[j])
-        names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.pval")#,RM.times[j])
-      }
-    }
-  }
-  colnames(result_strat) <- c("enroll", "events", "analysis.time",
-                               "pvalue", "chisq", "upper.bound","lower.bound",
-                               "exp.diff", "stop.eff", "stop.fut", "medianA", "medianB","medianAneg","medianApos",
-                               "medianBneg", "medianBpos", "medianneg", "medianpos", "medianphys", "medianstrat",
-                               "hr.BvA.mean","hr.BvA.lower","hr.BvA.upper","hr.BvA.pval",
-                               "hr.pos.mean","hr.pos.lower","hr.pos.upper","hr.pos.pval",
-                               "hr.neg.mean","hr.neg.lower","hr.neg.upper","hr.neg.pval",
-                               "hr.int.mean","hr.int.lower","hr.int.upper","hr.int.pval", 
-                               "hr.arm.mean","hr.arm.lower","hr.arm.upper","hr.arm.pval", names1_strat, names2_strat, 
-                              "pseudom.time", "pseudor.time")
-  
-  
-  # creating the result data frame for the enirchment design results; same as the stratified results
-  result_mod <- result_strat
-  
-  
-  # creating the result data frame for the strategy design results
-  cols_clin <- 24+(4*1)+(4*1)+2
-  result_clin <- data.frame(matrix(nrow=reps, ncol = cols_clin))
-  names1_clin <- NULL
-  names2_clin <- NULL
-  for (j in 1:1){
-    for (i in 1:4){
-      if (i %% 4==1){
-        names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.mean")#,time.points[j])
-      }
-      else if (i %% 4==2){
-        names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.lower")#,time.points[j])
-      }
-      else if (i %% 4==3){
-        names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.upper")#,time.points[j])
-      }
-      else if (i %% 4==0){
-        names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.pval")#,time.points[j])
-      }
-    }
-  }
-  for (j in 1:1){
-    for (i in 1:4){
-      if (i %% 4==1){
-        names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.mean")#,RM.times[j])
-      }
-      else if (i %% 4==2){
-        names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.lower")#,RM.times[j])
-      }
-      else if (i %% 4==3){
-        names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.upper")#,RM.times[j])
-      }
-      else if (i %% 4==0){
-        names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.pval")#,RM.times[j])
-      }
-    }
-  }
-  colnames(result_clin) <- c("enroll", "events", "analysis.time",
-                               "pvalue", "chisq", "upper.bound","lower.bound",
-                               "exp.diff", "stop.eff", "stop.fut", "medianphys", "medianstrat", "medianstratpos",
-                               "medianstratneg", "medianphyspos", "medianphysneg",
-                               "medianstratB", "medianstratA", "medianphysB","medianphysA",
-                               "hr.arm.mean", "hr.arm.lower", "hr.arm.upper","hr.arm.pval" ,names1_clin, names2_clin, 
-                             "pseudom.time", "pseudor.time")
-  
   if (estimand=="subgrp"){
+    # creating the result data frame for the enirchment design results
+    cols_enrich <- 17+(4*1)+(4*1)+2
+    result_enrich <- data.frame(matrix(nrow=reps, ncol = cols_enrich))
+    names1_enrich <- NULL
+    names2_enrich <- NULL
+    for (j in 1:1){
+      for (i in 1:4){
+        if (i %% 4==1){
+          names1_enrich[(i+(4*(j-1)))] <- paste("ratio.mean")
+        }
+        else if (i %% 4==2){
+          names1_enrich[(i+(4*(j-1)))] <- paste("ratio.lower")
+        }
+        else if (i %% 4==3){
+          names1_enrich[(i+(4*(j-1)))] <- paste("ratio.upper")
+        }
+        else if (i %% 4==0){
+          names1_enrich[(i+(4*(j-1)))] <- paste("ratio.pval")
+        }
+      }
+    }
+    for (j in 1:1){
+      for (i in 1:4){
+        if (i %% 4==1){
+          names2_enrich[(i+(4*(j-1)))] <- paste("RMST.mean")
+        }
+        else if (i %% 4==2){
+          names2_enrich[(i+(4*(j-1)))] <- paste("RMST.lower")
+        }
+        else if (i %% 4==3){
+          names2_enrich[(i+(4*(j-1)))] <- paste("RMST.upper")
+        }
+        else if (i %% 4==0){
+          names2_enrich[(i+(4*(j-1)))] <- paste("RMST.pval")
+        }
+      }
+    }
+    colnames(result_enrich) <- c("enroll", "events", "analysis.time",
+                                 "pvalue", "chisq", "upper.bound","lower.bound",
+                                 "exp.diff", "stop.eff", "stop.fut", "medianA", "medianB","medianpos",
+                                 "hr.mean", "hr.lower", "hr.upper","hr.pval" ,names1_enrich, names2_enrich, "pseudom.time", "pseudor.time")
+    
     min.surv <- min(medposB, medposA)
     pseudot <- (-log(0.5))/(log(2)/min.surv)
   
@@ -867,29 +753,29 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
       )
       
       # simulate the trial results for the stratified design
-      result_strat[i,] <- sim.trial(data=x, # input survival data from our data generating function
-                                     n=n, # total number of events
-                                     num_interim=num_interim, # total number of analyses, including final
-                                     int_timing=int_timing, # vector of proportion of events for each interim analysis timing
-                                     alpha=alpha, # one-sided type 1 error rate (upper boundary)
-                                     low_err=low_err,  # lower (futility) boundary error
-                                     bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
-                                    # time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
-                                    # RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
-                                     design.type="stratify",    # type of design being analyzed choices are:
-                                     # enrich
-                                     # stratify
-                                     # strategy
-                                     # modstrat
-                                     test.grp="pos",       # the group comparison that the logrank test is based on, choices are
-                                     # pos - trt B vs A in the positives
-                                     # neg - trt B vs A in the negatives
-                                     # clin - clinical utility; strategy arm vs phys choice arm
-                                     # trtB - pos vs neg for trtB patients
-                                     # trtA - pos vs neg for trtA patients
-                                     # inter - 4 way comparison for interaction; k=4 logrank test
-                                    pseudot.ratio=pseudot
-      )
+      # result_strat[i,] <- sim.trial(data=x, # input survival data from our data generating function
+      #                                n=n, # total number of events
+      #                                num_interim=num_interim, # total number of analyses, including final
+      #                                int_timing=int_timing, # vector of proportion of events for each interim analysis timing
+      #                                alpha=alpha, # one-sided type 1 error rate (upper boundary)
+      #                                low_err=low_err,  # lower (futility) boundary error
+      #                                bound.type=bound.type,  # boundary type 1= OBF, 2=Pockock for lower and upper boundary, respectively
+      #                               # time.points=time.points,    # value or vector of time points for which to compare survival probability at time points
+      #                               # RM.times=RM.times, # value or vector of time points to compare the restricted mean survival probability
+      #                                design.type="stratify",    # type of design being analyzed choices are:
+      #                                # enrich
+      #                                # stratify
+      #                                # strategy
+      #                                # modstrat
+      #                                test.grp="pos",       # the group comparison that the logrank test is based on, choices are
+      #                                # pos - trt B vs A in the positives
+      #                                # neg - trt B vs A in the negatives
+      #                                # clin - clinical utility; strategy arm vs phys choice arm
+      #                                # trtB - pos vs neg for trtB patients
+      #                                # trtA - pos vs neg for trtA patients
+      #                                # inter - 4 way comparison for interaction; k=4 logrank test
+      #                               pseudot.ratio=pseudot
+      # )
       
       # # simulate the trial results for the modified strategy design
       # result_mod[i,] <- sim.trial(data=x, # input survival data from our data generating function
@@ -916,12 +802,58 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
       #                               pseudot.ratio=pseudot
       # )
     }
-    resultList <- list("subgrp_enrich"=result_enrich, "subgrp_stratify"=result_strat
+    resultList <- list("subgrp_enrich"=result_enrich#, "subgrp_stratify"=result_strat
                        #, "subgrp_modstrat"=result_mod
                        )
   }
   
   else if (estimand=="clin"){
+    # creating the result data frame for the strategy design results
+    cols_clin <- 24+(4*1)+(4*1)+2
+    result_clin <- data.frame(matrix(nrow=reps, ncol = cols_clin))
+    names1_clin <- NULL
+    names2_clin <- NULL
+    for (j in 1:1){
+      for (i in 1:4){
+        if (i %% 4==1){
+          names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.mean")#,time.points[j])
+        }
+        else if (i %% 4==2){
+          names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.lower")#,time.points[j])
+        }
+        else if (i %% 4==3){
+          names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.upper")#,time.points[j])
+        }
+        else if (i %% 4==0){
+          names1_clin[(i+(4*(j-1)))] <- paste("ratio.arm.pval")#,time.points[j])
+        }
+      }
+    }
+    for (j in 1:1){
+      for (i in 1:4){
+        if (i %% 4==1){
+          names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.mean")#,RM.times[j])
+        }
+        else if (i %% 4==2){
+          names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.lower")#,RM.times[j])
+        }
+        else if (i %% 4==3){
+          names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.upper")#,RM.times[j])
+        }
+        else if (i %% 4==0){
+          names2_clin[(i+(4*(j-1)))] <- paste("RMST.arm.pval")#,RM.times[j])
+        }
+      }
+    }
+    colnames(result_clin) <- c("enroll", "events", "analysis.time",
+                               "pvalue", "chisq", "upper.bound","lower.bound",
+                               "exp.diff", "stop.eff", "stop.fut", "medianphys", "medianstrat", "medianstratpos",
+                               "medianstratneg", "medianphyspos", "medianphysneg",
+                               "medianstratB", "medianstratA", "medianphysB","medianphysA",
+                               "hr.arm.mean", "hr.arm.lower", "hr.arm.upper","hr.arm.pval" ,names1_clin, names2_clin, 
+                               "pseudom.time", "pseudor.time")
+    
+    
     min.surv <- min(medposB, medposA, mednegB, mednegA)
     pseudot <- (-log(0.5))/(log(2)/min.surv)
     for (i in 1:reps){
@@ -1040,6 +972,87 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
   }
   
   else if (estimand=="inter"){
+    # creating the result data frame for the stratified design results
+    cols_strat <- 40+(20*1)+(20*1)+2
+    result_strat <- data.frame(matrix(nrow=reps, ncol = cols_strat))
+    names1_strat <- NULL
+    names2_strat <- NULL
+    for (j in 1:1){
+      for (i in 1:4){
+        if (i %% 4==1){
+          names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.mean")
+          names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.mean")
+          names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.mean")
+          names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.mean")
+          names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.mean")
+        }
+        else if (i %% 4==2){
+          names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.lower")
+          names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.lower")
+          names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.lower")#,time.points[j])
+          names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.lower")#,time.points[j])
+          names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.lower")#,time.points[j])
+        }
+        else if (i %% 4==3){
+          names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.upper")#,time.points[j])
+          names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.upper")#,time.points[j])
+          names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.upper")#,time.points[j])
+          names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.upper")#,time.points[j])
+          names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.upper")#,time.points[j])
+        }
+        else if (i %% 4==0){
+          names1_strat[(i+(20*(j-1)))] <- paste("ratio.BvA.pval")#,time.points[j])
+          names1_strat[(4+i+(20*(j-1)))] <- paste("ratio.pos.pval")#,time.points[j])
+          names1_strat[(8+i+(20*(j-1)))] <- paste("ratio.neg.pval")#,time.points[j])
+          names1_strat[(12+i+(20*(j-1)))] <- paste("ratio.int.pval")#,time.points[j])
+          names1_strat[(16+i+(20*(j-1)))] <- paste("ratio.arm.pval")#,time.points[j])
+        }
+      }
+    }
+    for (j in 1:1){#length(RM.times)){
+      for (i in 1:4){
+        if (i %% 4==1){
+          names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.mean")#,RM.times[j])
+          names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.mean")#,RM.times[j])
+          names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.mean")#,RM.times[j])
+          names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.mean")#,RM.times[j])
+          names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.mean")#,RM.times[j])
+        }
+        else if (i %% 4==2){
+          names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.lower")#,RM.times[j])
+          names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.lower")#,RM.times[j])
+          names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.lower")#,RM.times[j])
+          names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.lower")#,RM.times[j])
+          names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.lower")#,RM.times[j])
+        }
+        else if (i %% 4==3){
+          names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.upper")#,RM.times[j])
+          names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.upper")#,RM.times[j])
+          names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.upper")#,RM.times[j])
+          names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.upper")#,RM.times[j])
+          names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.upper")#,RM.times[j])
+        }
+        else if (i %% 4==0){
+          names2_strat[(i+(20*(j-1)))] <- paste("RMST.BvA.pval")#,RM.times[j])
+          names2_strat[(4+i+(20*(j-1)))] <- paste("RMST.pos.pval")#,RM.times[j])
+          names2_strat[(8+i+(20*(j-1)))] <- paste("RMST.neg.pval")#,RM.times[j])
+          names2_strat[(12+i+(20*(j-1)))] <- paste("RMST.int.pval")#,RM.times[j])
+          names2_strat[(16+i+(20*(j-1)))] <- paste("RMST.arm.pval")#,RM.times[j])
+        }
+      }
+    }
+    colnames(result_strat) <- c("enroll", "events", "analysis.time",
+                                "pvalue", "chisq", "upper.bound","lower.bound",
+                                "exp.diff", "stop.eff", "stop.fut", "medianA", "medianB","medianAneg","medianApos",
+                                "medianBneg", "medianBpos", "medianneg", "medianpos", "medianphys", "medianstrat",
+                                "hr.BvA.mean","hr.BvA.lower","hr.BvA.upper","hr.BvA.pval",
+                                "hr.pos.mean","hr.pos.lower","hr.pos.upper","hr.pos.pval",
+                                "hr.neg.mean","hr.neg.lower","hr.neg.upper","hr.neg.pval",
+                                "hr.int.mean","hr.int.lower","hr.int.upper","hr.int.pval", 
+                                "hr.arm.mean","hr.arm.lower","hr.arm.upper","hr.arm.pval", names1_strat, names2_strat, 
+                                "pseudom.time", "pseudor.time")
+    
+    
     min.surv <- min(medposB, medposA, mednegB, mednegA)
     pseudot <- (-log(0.5))/(log(2)/min.surv)
     for (i in 1:reps){
