@@ -22,6 +22,39 @@
 source("Programs/sim_source.R")
 
 
+analyze.comp <- function(data){
+  n <- nrow(data)
+  # LR T1E
+  lr.t1.shih <- length(data$lr.pval.shih[data$lr.pval.shih <= .05])/n
+  lr.t1.strat <- length(data$lr.pval.strat[data$lr.pval.strat <= .05])/n
+  # HR T1E
+  hr.t1.shih <- length(data$ht.pval.shih[data$ht.pval.shih <= .05])/n
+  hr.t1.strat <- length(data$ht.pval.strat[data$ht.pval.strat <= .05])/n
+  # HR Mean
+  hr.mean.shih <- mean(data$hr.shih)
+  hr.mean.strat <- mean(data$hr.strat)
+  # RMST T1E
+  rmst.t1.shih <- length(data$pval.rmst.shih[data$pval.rmst.shih <= .05])/n
+  rmst.t1.strat <- length(data$pval.rmst.strat[data$pval.rmst.strat <= .05])/n
+  # RMST mean
+  rmst.mean.shih <- mean(data$rmst.shih)
+  rmst.mean.strat <- mean(data$rmst.strat)
+  # SD T1E
+  sd.t1.shih <- length(data$pval.sd.shih[data$pval.sd.shih <= .05])/n
+  sd.t1.strat <- length(data$pval.sd.strat[data$pval.sd.strat <= .05])/n
+  # SD Mean
+  sd.mean.shih <- mean(data$mean.sd.shih)
+  sd.mean.strat <- mean(data$mean.sd.strat)
+  
+  return(c("lr.t1.shih"=lr.t1.shih,"lr.t1.strat"=lr.t1.strat, "hr.t1.shih"=hr.t1.shih,
+         "hr.t1.strat"=hr.t1.strat, "hr.mean.shih"=hr.mean.shih,"hr.mean.strat"=hr.mean.strat,
+         "rmst.t1.shih"=rmst.t1.shih,"rmst.t1.strat"=rmst.t1.strat,
+          "rmst.mean.shih"=rmst.mean.shih, "rmst.mean.strat"=rmst.mean.strat,
+         "sd.t1.shih"=sd.t1.shih,"sd.t1.strat"=sd.t1.strat,
+         "sd.mean.shih"=sd.mean.shih, "sd.mean.strat"=sd.mean.strat))
+}
+
+
 ## function to summarize one results data frame
 analyze.exp <- function(data,              # result data frame 
                     estimand,          # subgrp, clin, inter

@@ -338,8 +338,8 @@ check1 <- simdat(n=5000,
                  rand.pos=.5,
                  rand.neg=.5,
                  rand=.5,
-                 phys.choice.pos=.2,
-                 phys.choice.neg=.8,
+                 phys.choice.pos=1,
+                 phys.choice.neg=1,
                  
                  medposB=21,
                  distrposB="exp",
@@ -353,8 +353,38 @@ check1 <- simdat(n=5000,
                  
                  mednegA=12,
                  distrnegA="exp")
+clin
+
+debug(clin.util.comp)
+test <- clin.util.comp(n=400,
+                       accru=25,
+                       ltfu=.02,
+                       pos=0.5,
+                       pc.pos=1,
+                       pc.neg=1,
+                       medposB=21,
+                       medposA=9,
+                       mednegB=9,
+                       mednegA12,
+                       pseudo.diff=12)
+
+test1 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
+test2 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+test3 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.12.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
+test4 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.12.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+test5 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
+test6 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
 
 
+length(test1[test1$lr.pval.shih<=.05,1])/1000
+length(test1[test1$lr.pval.strat<=.05,1])/1000
+
+mean(test1$mean.sd.shih)
+mean(test1$mean.sd.strat)
+
+mean(test1$rmst.shih)
+mean(test1$rmst.strat) - 1.96*(sd(test1$rmst.strat)/sqrt(length(test1$rmst.strat)))
+mean(test1$rmst.strat) + 1.96*(sd(test1$rmst.strat)/sqrt(length(test1$rmst.strat)))
 
 temp <- check1[order(check1$arm),]
 

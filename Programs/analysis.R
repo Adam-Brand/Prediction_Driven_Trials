@@ -22,6 +22,31 @@
 source("Programs/analysis.func.R")
 
 
+#### this generates the simulation results table in the paper
+
+comp9.25 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+comp9.5 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.9.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
+comp12.25 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.12.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+comp12.5 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.12.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
+comp21.25 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.25.LTFU.0.02.rds")
+comp21.5 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
+
+### getting the output for table 2 in the paper
+analyze.comp(comp9.25)
+analyze.comp(comp9.5)
+analyze.comp(comp12.25)
+analyze.comp(comp12.5)
+analyze.comp(comp21.25)
+analyze.comp(comp21.5)
+
+#### analysis for the scenario with median survival in positives on B is 9 months
+#### and there is 0.25 proportion of biomarker positives
+
+
+
+####### BELOW HERE IS ANALYSIS IN THE SUPPLEMENT
+
+
 ## creating the figure for the power curves for the differential treatment effect estimand
 
 
@@ -120,10 +145,11 @@ annotate_figure(diff.fig,
                 top=text_grob("Median Survival for Positive Patients on Treatment B
                     9 months                                               12 months                                             15 months          ", size=12),
                 left=text_grob("Proportion of Biomarker Positive Patients
-                        0.5                                          0.25", size=12, rot=90),
-                bottom=text_grob("Figure 3: Power of the Biomarker Stratified Design 
-to Detect Differential Treatment Effect by Number of Events: 
-Red=HR, Blue=RMST, Green=SD", size=15))
+                        0.5                                          0.25", size=12, rot=90)
+#                 ,bottom=text_grob("Figure S2: Power of the Biomarker Stratified Design 
+# to Detect Differential Treatment Effect by Number of Events: 
+# Red=HR, Blue=RMST, Green=SD", size=15)
+                )
 
 
 #### creating the figure for single subgroup effect
@@ -160,11 +186,11 @@ subgrp.fig <- ggarrange(fig12.5, fig15.5,
 
 annotate_figure(subgrp.fig, 
                 top=text_grob("Median Survival for Positive Patients on Treatment B
-                          12 months                                                     15 months                  ", size=12),
-                bottom=text_grob("Figure 2: Power of the Enrichment Design 
-to Detect Treatment Effect for Biomarker 
-Positive Patients by Number of Events: 
-Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
+                          12 months                                                     15 months                  ", size=12)
+#                 , bottom=text_grob("Figure 2: Power of the Enrichment Design 
+# to Detect Treatment Effect for Biomarker 
+# Positive Patients by Number of Events: 
+# Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
                 )
 
 ### creating the power figure for clinical utility
@@ -297,10 +323,11 @@ annotate_figure(clin.fig,
                 top=text_grob("Proportion of Physician's Choice Equalling Biomarker-directed Strategy
          0.25                                                      0.5                                                     0.75", size=12),
                 left=text_grob("Median Survival in Positive Patients on Treatment B
-                  21 months                    12 months                      9 months", size=12, rot=90),
-                bottom=text_grob("Figure 4: Power of the Strategy Design 
-to Detect Clinical Utility for by Number of Events: 
-Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15))
+  21 months                       12 months                         9 months", size=12, rot=90)
+#                 , bottom=text_grob("Figure 4: Power of the Strategy Design 
+# to Detect Clinical Utility for by Number of Events: 
+# Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
+                )
 
 #### creating individual summary tables for each scenario
 

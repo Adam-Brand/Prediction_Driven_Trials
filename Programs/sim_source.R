@@ -1151,3 +1151,191 @@ eval.scen <- function(estimand, # declaring the estimand of interest; options ar
 }
 
 
+
+##### function to simulate the clinical utility estimand of Shih and compare with paper's definition
+#####
+clin.util.comp <- function(n,       # number of events
+                           accru,   # accrual rate per month
+                           ltfu,    # loss to follow-up rate
+                           pos,     # proportion of marker positive
+                           pc.pos,   # proportion of physician's choice agreement in positives
+                           pc.neg,   # proportion of physician's choice agreement in negatives
+                           medposB, # median survival in positive patients on B
+                           medposA, # median survival in positive patients on A
+                           mednegB, # median survival in negative patients on B
+                           mednegA, # median survival in negative patients on A
+                           pseudo.diff # time at which to compare survival differences
+                           ){
+  # simulating the data
+  data <- simdat(n=(n*4), 
+                 accru.rate=accru, 
+                 loss.fu.rate=ltfu, 
+                 marker.pos=pos, 
+                 rand.arm=.5,
+                 rand.pos=.5,
+                 rand.neg=.5,
+                 rand=.5,
+                 phys.choice.pos=pc.pos,
+                 phys.choice.neg=pc.neg,
+                 medposB=21,
+                 distrposB="exp",
+                 medposA=9,
+                 distrposA="exp",
+                 mednegB=9,
+                 distrnegB="exp",
+                 mednegA=12,
+                 distrnegA="exp")
+  ### getting the data for the shih estimand by pooling those who received the treatment
+  ### matching the directed treatment versus all subjects
+  rand.arm <- data
+  for (i in 1:nrow(rand.arm)){
+    if (rand.arm$trtn.ms[i]==1){rand.arm$surv.time[i] <- rand.arm$surv.timeB[i]
+                                rand.arm$event.time[i] <- rand.arm$event.timeB[i]}
+    else {rand.arm$surv.time[i] <- rand.arm$surv.timeA[i]
+          rand.arm$event.time[i] <- rand.arm$event.timeA[i]}
+  }
+  rand.arm$arm <- "rand"
+  
+  dir.arm <- data[(data$marker.stat==1 & data$trtn.ms==1) | (data$marker.stat==0 & data$trtn.ms==0),]
+  for (i in 1:nrow(dir.arm)){
+    if (dir.arm$trtn.ms[i]==1){dir.arm$surv.time[i] <- dir.arm$surv.timeB[i]
+                              dir.arm$event.time[i] <- dir.arm$event.timeB[i]}
+    else {dir.arm$surv.time[i] <- dir.arm$surv.timeA[i]
+          dir.arm$event.time[i] <- dir.arm$event.timeA[i]}
+  }
+  dir.arm$arm <- "dir"
+  
+  shih.data <- rbind(rand.arm,dir.arm)
+  
+  ##### getting the data for the strategy estimand porposed in the paper
+  strat.data <- data
+  for (i in 1:nrow(strat.data)){
+    if (strat.data$arm[i]=="phys"){strat.data$trt[i]=strat.data$phys.trt[i]
+                                  strat.data$trtn[i]=strat.data$phys.trtn[i]}
+    else if (strat.data$arm[i]=="strat" & strat.data$marker.stat[i]==1){strat.data$trt[i]="B"
+                                  strat.data$trtn[i]=1}
+    else if (strat.data$arm[i]=="strat" & strat.data$marker.stat[i]==0){strat.data$trt[i]="A"
+                                  strat.data$trtn[i]=0}
+  }
+  
+  for (i in 1:length(strat.data[,1])){
+    if (strat.data$trtn[i]==1){strat.data$surv.time[i]=strat.data$surv.timeB[i]
+                              strat.data$event.time[i]=strat.data$event.timeB[i]}
+    else {strat.data$surv.time[i]=strat.data$surv.timeA[i]
+          strat.data$event.time[i]=strat.data$event.timeA[i]}
+  }
+  
+  ## subsetting data on only those who are enrolled before n events
+  temp <- strat.data[order(strat.data$event.time),]
+  temp <- temp[temp$event==1,]
+  stdy.time <- temp[n,"event.time"]
+  shih.data <- shih.data[shih.data$entry.time < stdy.time,]
+  strat.data <- strat.data[strat.data$entry.time < stdy.time,]
+  
+  for (i in 1:nrow(shih.data)){
+    if (shih.data$event.time[i] > stdy.time){
+      shih.data$event[i] <- 0
+      shih.data$surv.time[i] <- stdy.time - shih.data$entry.time[i]
+    }
+  }
+  
+  for (i in 1:nrow(strat.data)){
+    if (strat.data$event.time[i] > stdy.time){
+      strat.data$event[i] <- 0
+      strat.data$surv.time[i] <- stdy.time - strat.data$entry.time[i]
+    }
+  }
+  
+  shih.data <- shih.data[order(shih.data$arm),]
+  lr.shih <- survdiff(Surv(surv.time, event) ~ arm, data=shih.data)
+  
+  strat.data <- strat.data[order(strat.data$arm),]
+  lr.strat <- survdiff(Surv(surv.time, event) ~ arm, data=strat.data)
+  
+  # extracting the p-value form the logrank test
+  pval.shih <- 1-pchisq(lr.shih$chisq, length(lr.shih$n) - 1)
+  pval.strat <- 1-pchisq(lr.strat$chisq, length(lr.strat$n) - 1)
+  
+  ## getting SD and rmst estimates via pseudo-obs and HR estimates via Cox
+  
+  # calculating max follow-up time for rmst calcuation
+  trtB <- strat.data[strat.data$trtn==1,]
+  trtB <- trtB[order(trtB$surv.time),]
+  maxB <- max(trtB$surv.time)
+  trtA <- strat.data[strat.data$trtn==0,]
+  trtA <- trtA[order(trtA$surv.time),]
+  maxA <- max(trtA$surv.time)
+  if ((maxA < maxB) & trtA$event[length(trtA[,1])]==1){
+    pseudo_time <- maxB
+  }
+  else if ((maxA > maxB) & trtB$event[length(trtB[,1])]==0){
+    pseudo_time <- maxB
+  }
+  else {pseudo_time <- maxA}
+  
+  
+  # using the shih estimand
+  pseudo.shih <- pseudosurv(shih.data$surv.time, shih.data$event, tmax=pseudo.diff)
+  ipseudo.shih <- pseudo.shih$pseudo[,ncol(pseudo.shih$pseudo)]
+  pseudom.shih <- pseudomean(shih.data$surv.time, shih.data$event, tmax=pseudo_time)
+  temp.shih <- data.frame(cbind(shih.data, ipseudo=ipseudo.shih, pseudom=pseudom.shih))
+  
+  fit.sd.shih <- geese(formula=ipseudo.shih ~ arm, data=temp.shih, id=id, scale.fix=TRUE, 
+                   family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
+  sum_fit.sd.shih <- round(cbind(mean=fit.sd.shih$beta, SE=sqrt(diag(fit.sd.shih$vbeta.ajs)), Z=fit.sd.shih$beta/sqrt(diag(fit.sd.shih$vbeta.ajs)),
+                             PVal = 2-2*pnorm(abs(fit.sd.shih$beta/sqrt(diag(fit.sd.shih$vbeta.ajs))))),4)
+  
+  mean.sd.shih <- sum_fit.sd.shih["armrand","mean"]
+  pval.sd.shih <- sum_fit.sd.shih["armrand","PVal"]
+  
+  fit.rm.shih <- geese(pseudom.shih ~ arm, data=temp.shih, id=id, jack=TRUE, family=gaussian, corstr="independence", scale.fix=F)
+  sum.fit.rm.shih <- round(cbind(mean=fit.rm.shih$beta, SE=sqrt(diag(fit.rm.shih$vbeta.ajs)), Z=fit.rm.shih$beta/sqrt(diag(fit.rm.shih$vbeta.ajs)),
+                            PVal = 2-2*pnorm(abs(fit.rm.shih$beta/sqrt(diag(fit.rm.shih$vbeta.ajs))))),4)
+  
+  rmst.shih <- sum.fit.rm.shih["armrand","mean"]
+  pval.rmst.shih <- sum.fit.rm.shih["armrand","PVal"]
+  
+  fit.cox.shih <- coxph(Surv(surv.time, event) ~ arm, data=temp.shih, cluster=id)
+  hr.shih <- exp(fit.cox.shih$coefficients["armrand"])
+  ht.pval.shih <- summary(fit.cox.shih)$waldtest[3]
+  
+  # using the paper porposed estimand
+  pseudo.strat <- pseudosurv(strat.data$surv.time, strat.data$event, tmax=pseudo.diff)
+  ipseudo.strat <- pseudo.strat$pseudo[,ncol(pseudo.strat$pseudo)]
+  pseudom.strat <- pseudomean(strat.data$surv.time, strat.data$event, tmax=pseudo_time)
+  temp.strat <- data.frame(cbind(strat.data, ipseudo=ipseudo.strat, pseudom=pseudom.strat))
+  
+  fit.sd.strat <- geese(formula=ipseudo.strat ~ arm, data=temp.strat, id=id, scale.fix=TRUE, 
+                       family=gaussian, jack=TRUE, mean.link="identity", corstr="independence")
+  sum_fit.sd.strat <- round(cbind(mean=fit.sd.strat$beta, SE=sqrt(diag(fit.sd.strat$vbeta.ajs)), Z=fit.sd.strat$beta/sqrt(diag(fit.sd.strat$vbeta.ajs)),
+                                 PVal = 2-2*pnorm(abs(fit.sd.strat$beta/sqrt(diag(fit.sd.strat$vbeta.ajs))))),4)
+  
+  mean.sd.strat <- sum_fit.sd.strat["armstrat","mean"]
+  pval.sd.strat <- sum_fit.sd.strat["armstrat","PVal"]
+  
+  fit.rm.strat <- geese(pseudom.strat ~ arm, data=temp.strat, id=id, jack=TRUE, family=gaussian, corstr="independence", scale.fix=F)
+  sum.fit.rm.strat <- round(cbind(mean=fit.rm.strat$beta, SE=sqrt(diag(fit.rm.strat$vbeta.ajs)), Z=fit.rm.strat$beta/sqrt(diag(fit.rm.strat$vbeta.ajs)),
+                                 PVal = 2-2*pnorm(abs(fit.rm.strat$beta/sqrt(diag(fit.rm.strat$vbeta.ajs))))),4)
+  
+  rmst.strat <- sum.fit.rm.strat["armstrat","mean"]
+  pval.rmst.strat <- sum.fit.rm.strat["armstrat","PVal"]
+  
+  fit.cox.strat <- coxph(Surv(surv.time, event) ~ arm, data=temp.strat, cluster=id)
+  hr.strat <- exp(fit.cox.strat$coefficients["armstrat"])
+  ht.pval.strat <- summary(fit.cox.strat)$waldtest[3]
+  
+  return(c("events"=n,"stdy.time"=stdy.time,"lr.pval.shih"=pval.shih,"lr.pval.strat"=pval.strat,
+           "mean.sd.shih"=mean.sd.shih,"pval.sd.shih"=pval.sd.shih,"rmst.shih"=rmst.shih,
+           "pval.rmst.shih"=pval.rmst.shih,"hr.shih"=hr.shih,"ht.pval.shih"=ht.pval.shih,
+           "mean.sd.strat"=mean.sd.strat,"pval.sd.strat"=pval.sd.strat,"rmst.strat"=rmst.strat,
+           "pval.rmst.strat"=pval.rmst.strat,"hr.strat"=hr.strat,"ht.pval.strat"=ht.pval.strat))
+  
+}
+
+
+
+
+
+
+
+
