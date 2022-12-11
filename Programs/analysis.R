@@ -146,9 +146,9 @@ annotate_figure(diff.fig,
                     9 months                                               12 months                                             15 months          ", size=12),
                 left=text_grob("Proportion of Biomarker Positive Patients
                         0.5                                          0.25", size=12, rot=90)
-#                 ,bottom=text_grob("Figure S2: Power of the Biomarker Stratified Design 
-# to Detect Differential Treatment Effect by Number of Events: 
-# Red=HR, Blue=RMST, Green=SD", size=15)
+                 ,bottom=text_grob("Figure S2: Power of the Biomarker Stratified Design 
+ to Detect Differential Treatment Effect by Number of Events: 
+ Red=HR, Blue=RMST, Green=SD", size=15)
                 )
 
 
@@ -187,10 +187,10 @@ subgrp.fig <- ggarrange(fig12.5, fig15.5,
 annotate_figure(subgrp.fig, 
                 top=text_grob("Median Survival for Positive Patients on Treatment B
                           12 months                                                     15 months                  ", size=12)
-#                 , bottom=text_grob("Figure 2: Power of the Enrichment Design 
-# to Detect Treatment Effect for Biomarker 
-# Positive Patients by Number of Events: 
-# Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
+                 , bottom=text_grob("Figure S1: Power of the Enrichment Design 
+ to Detect Treatment Effect for Biomarker 
+ Positive Patients by Number of Events: 
+ Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
                 )
 
 ### creating the power figure for clinical utility
@@ -323,10 +323,10 @@ annotate_figure(clin.fig,
                 top=text_grob("Proportion of Physician's Choice Equalling Biomarker-directed Strategy
          0.25                                                      0.5                                                     0.75", size=12),
                 left=text_grob("Median Survival in Positive Patients on Treatment B
-  21 months                       12 months                         9 months", size=12, rot=90)
-#                 , bottom=text_grob("Figure 4: Power of the Strategy Design 
-# to Detect Clinical Utility for by Number of Events: 
-# Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
+                      21 months                       12 months                         9 months", size=12, rot=90)
+                 , bottom=text_grob("Figure S3: Power of the Strategy Design 
+ to Detect Clinical Utility for by Number of Events: 
+ Red=HR, Blue=SD, Green=LR, Purple=RMST", size=15)
                 )
 
 #### creating individual summary tables for each scenario
