@@ -32,16 +32,32 @@ comp21.25 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.21.Apos.9.B
 comp21.5 <- readRDS("Results/comp/comp.pc1..n.400.accru.10.exp.Bpos.21.Apos.9.Bneg.9.Aneg.12.M.0.5.LTFU.0.02.rds")
 
 ### getting the output for table 2 in the paper
-analyze.comp(comp9.25)
-analyze.comp(comp9.5)
-analyze.comp(comp12.25)
-analyze.comp(comp12.5)
-analyze.comp(comp21.25)
-analyze.comp(comp21.5)
+tab2.r1 <- round(abs(analyze.comp(comp9.25)), digits=4)
+tab2.r2 <- round(abs(analyze.comp(comp9.5)), digits=4)
+tab2.r3 <- round(abs(analyze.comp(comp12.25)), digits=4)
+tab2.r4 <- round(abs(analyze.comp(comp12.5)), digits=4)
+tab2.r5 <- round(abs(analyze.comp(comp21.25)), digits=4)
+tab2.r6 <- round(abs(analyze.comp(comp21.5)), digits=4)
 
-#### analysis for the scenario with median survival in positives on B is 9 months
-#### and there is 0.25 proportion of biomarker positives
+### creating table 2
+table2 <- matrix(nrow=6, ncol=16)
+table2[,1] <- c(9,9,12,12,21,21)
+table2[,2] <- c(0.25,0.50)
 
+for (i in 3:16){
+  table2[,i] <- c(tab2.r1[(i-2)],tab2.r2[(i-2)],tab2.r3[(i-2)],tab2.r4[(i-2)],tab2.r5[(i-2)],tab2.r6[(i-2)])
+}
+
+table2 <- data.frame(table2)
+
+colnames(table2) <- c("Median","Mark.pos","LR.exp","LR.comp","HR.rej.exp","HR.rej.comp","HR.mean.exp",
+                      "HR.mean.comp","rmst.rej.exp","rmst.rej.comp","rmst.mean.exp","rmst.mean.comp",
+                      "sd.rej.exp","sd.rej.comp","sd.mean.exp","sd.mean.comp")
+
+print(table2)
+
+##### NOTE, THE TABLE OUTPUTS MORE DECIMALS THAN IN THE TABLE IN THE PAPER. THIS IS BECAUSE THE ROUNDING
+##### FUNCTION IN R DOES NOT ROUND A 5 DECIMAL CONSISTENTLY. THE TABLE IN THE PAPER IS ROUNDED MANUALLY.
 
 
 ####### BELOW HERE IS ANALYSIS IN THE SUPPLEMENT
