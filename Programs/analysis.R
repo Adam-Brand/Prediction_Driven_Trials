@@ -368,56 +368,6 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          rpos=0.5,
          type1=TRUE)
 
-fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
-         Median Survival in M=1 Patients and X=B is 9 months, 
-          Proportion of Positive Patients in 0.5, and Sample size is 2000",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= 2000,
-         accru=10,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=12,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.5,
-         type1=TRUE)
-
-fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
-         Median Survival in M=1 Patients and X=B is 15 months, 
-          Proportion of Positive Patients in 0.5, and Sample size is 300",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= 300,
-         accru=10,
-         LTFU=.02,
-         medianBpos=15,
-         medianBneg=15,
-         medianApos=12,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=.25,
-         rpos=0.5,
-         type1=TRUE)
-
-fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
-         Median Survival in M=1 Patients and X=B is 15 months, 
-          Proportion of Positive Patients in 0.25, and Sample size is 400",
-         estimand="inter",
-         design.type="stratify",
-         smple.size= 400,
-         accru=10,
-         LTFU=.02,
-         medianBpos=15,
-         medianBneg=15,
-         medianApos=12,
-         medianAneg=12,
-         marker.pos=.25,
-         phys.choice=.25,
-         rpos=0.5,
-         type1=TRUE)
 
 fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
          Median Survival in M=1 Patients and X=B is 12 months, 
@@ -436,6 +386,44 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          rpos=0.5,
          type1=TRUE)
 
+
+fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
+         Median Survival in M=1 Patients and X=B is 15 months, 
+          Proportion of Positive Patients in 0.25, and Sample size is 400",
+         estimand="inter",
+         design.type="stratify",
+         smple.size= 400,
+         accru=10,
+         LTFU=.02,
+         medianBpos=15,
+         medianBneg=15,
+         medianApos=12,
+         medianAneg=12,
+         marker.pos=.25,
+         phys.choice=.25,
+         rpos=0.5,
+         type1=TRUE)
+
+
+fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
+         Median Survival in M=1 Patients and X=B is 9 months, 
+          Proportion of Positive Patients in 0.5, and Sample size is 2000",
+         estimand="inter",
+         design.type="stratify",
+         smple.size= 2000,
+         accru=10,
+         LTFU=.02,
+         medianBpos=9,
+         medianBneg=9,
+         medianApos=12,
+         medianAneg=12,
+         marker.pos=.5,
+         phys.choice=.25,
+         rpos=0.5,
+         type1=TRUE)
+
+
+
 fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
          Median Survival in M=1 Patients and X=B is 12 months, 
           Proportion of Positive Patients in 0.5, and Sample size is 500",
@@ -453,14 +441,41 @@ fintable(caption="Differential Treatment Effect Type 1 Error Rate:
          rpos=0.5,
          type1=TRUE)
 
+
+
+fintable(caption="Differential Treatment Effect Type 1 Error Rate: 
+         Median Survival in M=1 Patients and X=B is 15 months, 
+          Proportion of Positive Patients in 0.5, and Sample size is 300",
+         estimand="inter",
+         design.type="stratify",
+         smple.size= 300,
+         accru=10,
+         LTFU=.02,
+         medianBpos=15,
+         medianBneg=15,
+         medianApos=12,
+         medianAneg=12,
+         marker.pos=.5,
+         phys.choice=.25,
+         rpos=0.5,
+         type1=TRUE)
+
+
+
+
+
 ## operating characteristic tables
+
+
+
+
 fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 9, Proportion of 
          Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=2000, by=50),
+         smple.size= 2000,
          accru=10,
          LTFU=.02,
          medianBpos=9,
@@ -478,7 +493,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
+         smple.size= 700,
          accru=10,
          LTFU=.02,
          medianBpos=12,
@@ -488,13 +503,16 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          marker.pos=.25,
          phys.choice=.25,
          rpos=0.5)
+
+
+
 fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 15, Proportion of 
          Positive Patients in 0.25, and Probability of randomizing Positive Patients to 
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
+         smple.size= 400,
          accru=10,
          LTFU=.02,
          medianBpos=15,
@@ -511,7 +529,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=2000, by=50),
+         smple.size= 2000,
          accru=10,
          LTFU=.02,
          medianBpos=9,
@@ -529,7 +547,7 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
+         smple.size= 500,
          accru=10,
          LTFU=.02,
          medianBpos=12,
@@ -539,13 +557,16 @@ fintable(caption="Differential Treatment Effect Operating Characteristics Summar
          marker.pos=.5,
          phys.choice=.25,
          rpos=0.5)
+
+
+
 fintable(caption="Differential Treatment Effect Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 15, Proportion of 
          Positive Patients in 0.5, and Probability of randomizing Positive Patients to 
          Treatment B is 0.5",
          estimand="inter",
          design.type="stratify",
-         smple.size= seq(from=250, to=1000, by=50),
+         smple.size= 300,
          accru=10,
          LTFU=.02,
          medianBpos=15,
@@ -672,7 +693,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          Physician's Choice of Treatment is 0.25",
          estimand="clin",
          design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
+         smple.size= 3000,
          accru=10,
          LTFU=.02,
          medianBpos=9,
@@ -681,38 +702,6 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          medianAneg=12,
          marker.pos=.5,
          phys.choice=0.25,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.5",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=10,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.5,
-         rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 9, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.75",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=10,
-         LTFU=.02,
-         medianBpos=9,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
          rpos=0.67)
 
 
@@ -722,7 +711,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          Physician's Choice of Treatment is 0.25",
          estimand="clin",
          design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
+         smple.size= 1000,
          accru=10,
          LTFU=.02,
          medianBpos=12,
@@ -732,13 +721,15 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          marker.pos=.5,
          phys.choice=0.25,
          rpos=0.67)
+
+
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 12, Proportion of 
          Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
          Physician's Choice of Treatment is 0.5",
          estimand="clin",
          design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
+         smple.size= 2000,
          accru=10,
          LTFU=.02,
          medianBpos=12,
@@ -748,22 +739,8 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          marker.pos=.5,
          phys.choice=0.5,
          rpos=0.67)
-fintable(caption="Clinical Utility Operating Characteristics Summary: 
-         Median Survival in Positive Patients on Treatment B is 12, Proportion of 
-         Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
-         Physician's Choice of Treatment is 0.75",
-         estimand="clin",
-         design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
-         accru=10,
-         LTFU=.02,
-         medianBpos=12,
-         medianBneg=9,
-         medianApos=9,
-         medianAneg=12,
-         marker.pos=.5,
-         phys.choice=0.75,
-         rpos=0.67)
+
+
 
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 21, Proportion of 
@@ -771,7 +748,7 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          Physician's Choice of Treatment is 0.25",
          estimand="clin",
          design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
+         smple.size= 500,
          accru=10,
          LTFU=.02,
          medianBpos=21,
@@ -781,13 +758,16 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          marker.pos=.5,
          phys.choice=0.25,
          rpos=0.67)
+
+
+
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 21, Proportion of 
          Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
          Physician's Choice of Treatment is 0.5",
          estimand="clin",
          design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
+         smple.size= 750,
          accru=10,
          LTFU=.02,
          medianBpos=21,
@@ -797,13 +777,15 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          marker.pos=.5,
          phys.choice=0.5,
          rpos=0.67)
+
+
 fintable(caption="Clinical Utility Operating Characteristics Summary: 
          Median Survival in Positive Patients on Treatment B is 21, Proportion of 
          Positive Patients in 0.5, and Proportion Biomarker-directed Treatment Strategy Equalling
          Physician's Choice of Treatment is 0.75",
          estimand="clin",
          design.type="strategy",
-         smple.size= seq(from=500, to=3000, by=250),
+         smple.size= 3000,
          accru=10,
          LTFU=.02,
          medianBpos=21,
@@ -813,6 +795,8 @@ fintable(caption="Clinical Utility Operating Characteristics Summary:
          marker.pos=.5,
          phys.choice=0.75,
          rpos=0.67)
+
+
 
 ### creating summary tables for the single subgroup results
 
@@ -855,7 +839,7 @@ fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Sum
          Positive Patients is 0.25",
          estimand="subgrp",
          design.type="enrich",
-         smple.size= seq(from=50, to=800, by=50),
+         smple.size= 550,
          accru=10,
          LTFU=.02,
          medianBpos=12,
@@ -871,7 +855,7 @@ fintable(caption="Single Subgroup Treatment Effect Operating Characteristics Sum
          Positive Patients is 0.25",
          estimand="subgrp",
          design.type="enrich",
-         smple.size= seq(from=50, to=800, by=50),
+         smple.size= 150,
          accru=10,
          LTFU=.02,
          medianBpos=15,
